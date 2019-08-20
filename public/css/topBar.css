@@ -1,0 +1,76 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+#topBar {
+    display: block;
+    position: fixed;
+    top: 0;
+    float: left;
+    width: 100%;
+    height: 5%;
+    background-color: #0084da; /*#0096ff*/
+    color: white;
+    z-index: 10;
+    -webkit-box-shadow: 0px 3px 12px -3px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 3px 12px -3px rgba(0,0,0,0.75);
+	box-shadow: 0px 3px 12px -3px rgba(0,0,0,0.75);
+}
+#topBar form{
+    float: right;
+    /*margin: 0.4% 0.8%;*/
+    margin: 5.5px 10px;
+}
+#topBar form input{
+    color: black;
+    border-radius: 5px;
+    margin: 0 2px;
+    padding: 4px 7px;
+    border: 0px;
+}
+#loggedUser{
+    float: right;
+    /*margin: 0.56% 0.8%;*/
+    margin: 7px 2px;
+}
+.czen {
+    color: green;
+    display: block;
+    text-align: center;
+}
+.czen a {
+    color: green;
+    text-decoration: none;
+    font-family: SansSerif;
+}
+@media (max-width: 800px){
+    #topBar {
+        height: 9%;
+    }
+}
+.tlacitko{
+    font: bold 11px Arial;
+    text-decoration: none;
+    background-color: #EEEEEE;
+    color: #333333;
+    padding: 2px 6px 2px 6px;
+    border-radius: 2px;
+    /*
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
+    */
+}
+.button2 {
+    font-family: sans-serif;
+    text-decoration: none;
+    background-color: #EEEEEE;
+    color: #333333;
+    padding: 2px 6px 2px 6px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
+}
