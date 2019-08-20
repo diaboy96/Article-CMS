@@ -9,6 +9,20 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     </head>
     <body>
+    <div id="topBar">
+        <form method="post" action="LOGIN/login.php">
+            <input type="text" placeholder="jméno" name="name">
+            <input type="password" placeholder="heslo" name="pass">
+            <input type="submit" value="Přihlásit se">
+        </form>
+
+        <div style="margin: 7px 0 0 12px">
+            Ještě nemáte účet?
+            <a href="{#}{ path('registration') }#}">
+                <span style="top: 0.8px;position: relative">Zaregistrujte se</span>
+            </a>
+        </div>
+    </div>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>
