@@ -5,6 +5,7 @@
         <title>{% block title %}Article CMS{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{ asset('css/bulma.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/topBar.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         {% block stylesheets %}{% endblock %}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     </head>
@@ -13,20 +14,25 @@
             <nav class="navbar" role="navigation" aria-label="main navigation">
                 <div class="navbar-start">
                     <span class="navbar-item">
-                        Ještě nemáte účet?<a href="{{ path('registration') }}"> Zaregistrujte se</a>
+                        {% block navbar_left %}
+                            Ještě nemáte účet?
+                                <a href="{{ path('registration') }}"> Zaregistrujte se</a>
+                        {% endblock navbar_left %}
                     </span>
                 </div>
 
                 <div class="navbar-end">
                     <div class="navbar-item">
-                        {{ form_start(login_form) }}
-                        {{ form_widget(login_form) }}
-                            <input type="submit" value="Přihlásit se">
-                        {{ form_start(login_form) }}
+                        {% block navbar_right %}
+                            {{ form_start(login_form) }}
+                            {{ form_widget(login_form) }}
+                                <input type="submit" value="Přihlásit se">
+                            {{ form_start(login_form) }}
+                        {% endblock %}
                     </div>
                 </div>
             </nav>
-        {% endblock %}
+        {% endblock navbar %}
 
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
