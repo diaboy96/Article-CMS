@@ -32,7 +32,7 @@ class Login
     private $email;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable="true")
      */
     private $hash;
 
@@ -42,7 +42,7 @@ class Login
     private $active;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable="true")
      */
     private $type;
 
