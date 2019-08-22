@@ -32,7 +32,7 @@ class Login
     private $email;
 
     /**
-     * @ORM\Column(type="text", nullable="true")
+     * @ORM\Column(type="text")
      */
     private $hash;
 
