@@ -10,7 +10,7 @@
     </head>
     <body>
         {% block navbar %}
-            <nav class="navbar" role="navigation" aria-label="main navigation">
+            <nav class="navbar" aria-label="main navigation">
                 <div class="navbar-start">
                     <span class="navbar-item">
                         {% block navbar_left %}
@@ -26,7 +26,7 @@
                             {{ form_start(login_form) }}
                             {{ form_widget(login_form) }}
                                 <input type="submit" value="Přihlásit se">
-                            {{ form_start(login_form) }}
+                            {{ form_end(login_form) }}
                         {% endblock %}
                     </div>
                 </div>
