@@ -42,7 +42,7 @@ class Login
     private $active;
 
     /**
-     * @ORM\Column(type="text", nullable="true")
+     * @ORM\Column(type="text")
      */
     private $type;
 
