@@ -37,7 +37,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/registration/activation/{email}/{hash}", name="registration_activation", defaults={"email" = "not_set", "hash" = "not_set"}
+     * @Route("/registration/activation/{email}/{hash}", name="registration_activation", defaults={"email" = "not_set", "hash" = "not_set"})
      * @param $email
      * @param $hash
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
