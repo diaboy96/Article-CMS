@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MainController extends AbstractController //todo check all code
+class MainController extends AbstractController
 {
     /**
      * @Route("/", name="main")
@@ -24,29 +24,31 @@ class MainController extends AbstractController //todo check all code
         if ($login_form->isSubmitted() && $login_form->isValid()) {
             $form_data = $login_form->getData();
             $name = htmlspecialchars(strip_tags($form_data->getName()));
-            $pass = htmlspecialchars(strip_tags(hash('sha512', $form_data->getPass())));
+            $pass = hash('sha512', htmlspecialchars(strip_tags($form_data->getPass())));
 
             $login = $this->login($name, $pass);
             if ($login['logged'] === true) {
                 $session->set('user_id', $login['user_id']);
                 $session->set('user_name', $login['user_name']);
             } elseif ($login['logged'] === false) {
-                dump($login['message']); // todo message to frontend
+                dump($login['message']); // todo message to frontend - Login False
             }
 
         }
 
         $user_id = $session->get('user_id');
+        $user_name = $session->get('user_name');
 
-        if (isset($user_id) && !empty($user_id)){
+        if (isset($user_id) && !empty($user_id) && isset($user_name) && !empty($user_name)){
 
-            return $this->logged_in();
+            return $this->logged_in($user_id, $user_name);
 
         } else {
 
-            return $this->render('main/index.html.twig', [
+            return $this->render('main/index.html.twig', [ //todo add articles to this template (make new base template and extend it)
                 'login_form' => $login_form->createView()
             ]);
+
         }
 
     }
@@ -74,9 +76,9 @@ class MainController extends AbstractController //todo check all code
         return ['logged' => false, 'message' => $message];
     }
 
-    private function logged_in()
+    private function logged_in($user_id, $user_name)
     {
-      //todo add logout  $session->clear();
-        //todo add freontend render + create new template
+        //todo add logout button - $session->clear();
+        //todo add frontend render + create new template
     }
 }
