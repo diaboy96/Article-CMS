@@ -86,7 +86,7 @@ class MainController extends AbstractController
 
     private function logged_in($user_id, $user_name)
     {
-        
+
         return $this->render('main/logged_in.html.twig', [
             'user_name' => $user_name
         ]);
