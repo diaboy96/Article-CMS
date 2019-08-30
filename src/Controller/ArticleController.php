@@ -2,17 +2,33 @@
 
 namespace App\Controller;
 
-use App\Entity\Article;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
 {
-    public function fetchAllArticles()
+    /**
+     * @Route("/create/{article_id}", name="article_create")
+     */
+    public function createArticle()
     {
-        $articles = $this->getDoctrine()->getRepository(Article::class)->findBy(['id' => 'DESC']);
+        //todo
+    }
 
-        return $articles;
+    /**
+     * @Route("/edit/{article_id}", name="article_edit")
+     */
+    public function editArticle()
+    {
+        //todo
+    }
+
+    /**
+     * @Route("/remove/{article_id}", name="article_remove")
+     */
+    public function removeArticle()
+    {
+        //todo
     }
     
     /**
@@ -20,12 +36,10 @@ class ArticleController extends AbstractController
      */
     public function articleDetail($article_id)
     {
-
         if ($article_id !== 'not_set') {
-
             $article_id = intval($article_id);
-
         }
+        
         return $this->render('article/article_detail.html.twig', [
             'controller_name' => 'ArticleController',
         ]);
