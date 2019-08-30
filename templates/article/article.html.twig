@@ -1,34 +1,189 @@
+<style>
+    /**
+
+    CSS MAP:
+        1] MAIN -
+            1) header
+            2) container - content, main article design
+
+    **/
+
+    /* -------------------------------- */
+
+    /* 1] MAIN */
+    /* 1) header */
+    .arrow-back {
+        left: 9px;
+        font-size: 30px;
+        color: white;
+        text-decoration: none;
+    }
+    body {
+        zoom: 128%;
+    }
+    /* 2) container */
+    #content {
+        margin-top: 5%;
+    }
+    #orderBy {
+        text-align: center;
+        margin-bottom: 16px;
+    }
+    /* main article design */
+    .articleDiv {
+        width: 530px;
+        margin: 0 auto;
+    }
+    .comment {
+        margin-top: 12px;
+    }
+    .comment form input{
+        padding: 8px;
+    }
+    .comment form input[type=text]{
+        width: 78%;
+    }
+    .comment-value {
+        padding: 2.5px 0;
+    }
+    .articleDiv .topLine {
+        border-bottom: 2px solid #009aff;
+        padding-left: 6px;
+        height: 40px;
+        font-family: 'Roboto', sans-serif;
+        color: black;
+        font-size: 30px;
+    }
+    .articleDiv .topLine .deledit {
+        font-size: 16px;
+        float: right;
+    }
+    .articleDiv .bottomLine {
+        margin-bottom: 25px;
+        display: block;
+        padding: 2px;
+    }
+    .articleheadline {
+        font-size: 30px;
+        font-family: aileron;
+        font-weight: bold;
+        color: #626262;
+        padding: 12px 20px;
+        margin-bottom: 20px;
+        min-width: 325px;
+    }
+    .articlearticle {
+        width: 96.5%;
+        margin: 0 auto;
+    }
+    .articlearticle form{
+        top: 23px;
+        position: relative;
+        text-align: center;
+    }
+    .comments {
+        margin: 40px 0 0 30px;
+    }
+
+    #block {
+        height: 170px;
+        background-color: #2babff;
+        margin-bottom: 50px;
+    }
+    #block form input[type=text]{
+        padding: 12px 7px;
+        font-size: 22px;
+    }
+    #block ul {
+        text-align: center;
+        line-height: 230px;
+    }
+    #block ul li {
+        display: inline-block;
+        color: white;
+        width: 100px;
+        height: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    #block ul li img {
+        width: 100%;
+        height: 100%;
+    }
+    .zoom-in {
+        transition: transform .2s;
+    }
+    .zoom-in:hover {
+        transform: scale(1.35);
+    }
+</style>
+
+
+
+
+
+{% for key, article in articles %}
 <div class='articleDiv'>
 
-    <div class='topLine' id="{{ article_id }}">
-        {# ARTICLE HEADER #}
-        <a href='{{ path("article_detail") }}/{{ article_id }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
-            {{ article_header }}
-        </a>
-        {# /ARTICLE HEADER/ #}
-    </div>
 
-    <div class='bottomLine'>
-        {# ARTICLE CONTENT #}
-        <a href='{{ path("article_detail") }}/{{ article_id }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
-            {{ article_content }}
-        </a>
-        {# /ARTICLE CONTENT/ #}
-
-        {# COMMENT FORM #}
-        <div class="comment" style="bottom: 0;float: bottom">
-            {# TODO: make formType and deploy it here #}
+        <div class='topLine' id="{{ article['id'] }}">
+                {# ARTICLE HEADER #}
+                <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+                        {{ article['header'] }}
+                </a>
+                {# /ARTICLE HEADER/ #}
         </div>
-        {# /COMMENT FORM/ #}
 
-        {# COMMENTS #}
-        <div class="comment">
-            <div class="comment-value">
-                <span style="color: #0f81cc;font-weight: bold">{{ comment_user_name }}</span>
-                {{ comment_value }}
-            </div>
+        <div class='bottomLine'>
+                {# ARTICLE CONTENT #}
+                <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+                        {{ article['content']|raw }}
+                </a>
+                {# /ARTICLE CONTENT/ #}
+
+                {# COMMENT FORM #}
+                <div class="comment" style="bottom: 0;float: bottom">
+                        {# TODO: make formType and deploy it here #}
+                </div>
+                {# /COMMENT FORM/ #}
+
+                {# COMMENTS #}
+                <div class="comment">
+                        <div class="comment-value">
+                                <span style="color: #0f81cc;font-weight: bold">{#{ comment_user_name }#}</span>
+                                {#{ comment_value }#}
+                        </div>
+                </div>
+                {# /COMMENTS/ #}
         </div>
-        {# /COMMENTS/ #}
-    </div>
+
 
 </div>
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
