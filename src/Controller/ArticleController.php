@@ -39,7 +39,7 @@ class ArticleController extends AbstractController
         if ($article_id !== 'not_set') {
             $article_id = intval($article_id);
         }
-        
+
         return $this->render('article/article_detail.html.twig', [
             'controller_name' => 'ArticleController',
         ]);
