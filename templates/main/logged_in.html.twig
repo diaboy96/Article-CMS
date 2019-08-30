@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block navbar_right %}
+    Je přihlášen uživatel: {{ user_name }}  
+    <a href='{{ path('logout') }}' title='Odhlásit se'>
+        <img src='{{ asset('svg/logout.svg') }}' alt='logout_icon'>
+    </a>
+{% endblock %}
+
+{% block body %}
+
+{% endblock %}
