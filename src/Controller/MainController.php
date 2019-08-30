@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
+use App\Entity\Comment;
 use App\Entity\Login;
 use App\Form\LoginType;
+use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -86,12 +89,11 @@ class MainController extends AbstractController
 
     private function logged_in($user_id, $user_name)
     {
-        $ArticleController = new ArticleController();
-        dump($ArticleController->fetchAllArticles());
-
+        return $this->showAllArticles();
+/* todo uncomment
         return $this->render('main/logged_in.html.twig', [
             'user_name' => $user_name
-        ]);
+        ]);*/
     }
 
     private function logged_out($login_form)
@@ -99,5 +101,29 @@ class MainController extends AbstractController
         return $this->render('main/index.html.twig', [ //todo add articles to this template (make new base template and extend it)
             'login_form' => $login_form->createView()
         ]);
+    }
+
+    private function showAllArticles()
+    {
+        $doctrine = $this->getDoctrine();
+
+        $articles = $doctrine
+            ->getRepository(Article::class)
+            ->createQueryBuilder('a')
+            ->addOrderBy('a.id', 'DESC')
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+
+        $comments = $doctrine
+            ->getRepository(Comment::class)
+            ->createQueryBuilder('c')
+            ->join(Login::class, 'l', 'WITH', 'c.user_id = l.id')
+            ->addOrderBy('c.id', 'DESC')
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+
+        dump($articles, $comments);
+
+        return $this->render('article/article.html.twig', ['articles' => $articles]);
     }
 }
