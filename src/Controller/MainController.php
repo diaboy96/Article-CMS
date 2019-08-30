@@ -38,16 +38,13 @@ class MainController extends AbstractController
 
         $user_id = $session->get('user_id');
         $user_name = $session->get('user_name');
-
         if (isset($user_id) && !empty($user_id) && isset($user_name) && !empty($user_name)){
 
-            return $this->logged_in($user_id, $user_name);
+            return $this->logged_in($user_id, $user_name); // display view if user is logged
 
         } else {
 
-            return $this->render('main/index.html.twig', [ //todo add articles to this template (make new base template and extend it)
-                'login_form' => $login_form->createView()
-            ]);
+            return $this->logged_out($login_form); // display view if user is not logged
 
         }
 
@@ -66,7 +63,7 @@ class MainController extends AbstractController
             } elseif ($user_active == 'pending') {
                 $message = 'Váš účet není aktivní. Aktivujte ho pomocí odkazu v emailu.';
             } elseif ($user_active == 0) {
-                $message = 'Váš účet je zablokován.';
+                $message = 'Váš účet je zablokován. Kontaktujte prosím správce webu.';
             }
 
         } else {
@@ -76,9 +73,29 @@ class MainController extends AbstractController
         return ['logged' => false, 'message' => $message];
     }
 
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout()
+    {
+        $session = new Session();
+        $session->clear();
+
+        return $this->redirectToRoute('main', ['message' => 'Odhlášení proběhlo úspěšně']);
+    }
+
     private function logged_in($user_id, $user_name)
     {
-        //todo add logout button - $session->clear();
-        //todo add frontend render + create new template
+        
+        return $this->render('main/logged_in.html.twig', [
+            'user_name' => $user_name
+        ]);
+    }
+
+    private function logged_out($login_form)
+    {
+        return $this->render('main/index.html.twig', [ //todo add articles to this template (make new base template and extend it)
+            'login_form' => $login_form->createView()
+        ]);
     }
 }
