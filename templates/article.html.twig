@@ -1,0 +1,34 @@
+<div class='articleDiv'>
+
+    <div class='topLine' id="{{ article_id }}">
+        {# ARTICLE HEADER #}
+        <a href='{{ path("article") }}/{{ article_id }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+            {{ article_header }}
+        </a>
+        {# /ARTICLE HEADER/ #}
+    </div>
+
+    <div class='bottomLine'>
+        {# ARTICLE CONTENT #}
+        <a href='{{ path("article") }}/{{ article_id }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+            {{ article_content }}
+        </a>
+        {# /ARTICLE CONTENT/ #}
+
+        {# COMMENT FORM #}
+        <div class="comment" style="bottom: 0;float: bottom">
+            {# TODO: make formType and deploy it here #}
+        </div>
+        {# /COMMENT FORM/ #}
+
+        {# COMMENTS #}
+        <div class="comment">
+            <div class="comment-value">
+                <span style="color: #0f81cc;font-weight: bold">{{ comment_user_name }}</span>
+                {{ comment_value }}
+            </div>
+        </div>
+        {# /COMMENTS/ #}
+    </div>
+
+</div>

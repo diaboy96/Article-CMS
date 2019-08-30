@@ -33,7 +33,10 @@
             </nav>
         {% endblock navbar %}
 
-        {% block body %}{% endblock %}
+        {% block body %}
+            {{ include('article.html.twig') }}
+        {% endblock %}
+
         {% block javascripts %}{% endblock %}
     </body>
 </html>
