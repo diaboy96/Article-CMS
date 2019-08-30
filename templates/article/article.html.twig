@@ -2,7 +2,7 @@
 
     <div class='topLine' id="{{ article_id }}">
         {# ARTICLE HEADER #}
-        <a href='{{ path("article") }}/{{ article_id }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+        <a href='{{ path("article_detail") }}/{{ article_id }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
             {{ article_header }}
         </a>
         {# /ARTICLE HEADER/ #}
@@ -10,7 +10,7 @@
 
     <div class='bottomLine'>
         {# ARTICLE CONTENT #}
-        <a href='{{ path("article") }}/{{ article_id }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+        <a href='{{ path("article_detail") }}/{{ article_id }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
             {{ article_content }}
         </a>
         {# /ARTICLE CONTENT/ #}
