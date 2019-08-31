@@ -118,14 +118,9 @@ class MainController extends AbstractController
 
         $comments = $doctrine
             ->getRepository(Comment::class)
-            ->createQueryBuilder('c')
-            //->join(Login::class, 'l', 'WITH', 'c.user_id = l.id')
-            ->addOrderBy('c.id', 'DESC')
-            ->getQuery()
-            ->getResult(Query::HYDRATE_ARRAY);
-        // todo: join doesnt work ---> misto user_id vypsat uzivatelske jmeno
+            ->fetchAllCommentsAndJoinUserName();
 
-        // get CommentType field
+        // get CommentType form
         $comment_form = $this->createForm(CommentType::class);
         $comment_form->handleRequest($request);
 
@@ -136,14 +131,13 @@ class MainController extends AbstractController
             if ($saved) {
                 //todo message frontend SAVED SUCCESSFUL
                 dump('saved');
+                return $this->redirectToRoute('main');
             } else {
                 dump('error');
                 //todo message frontend SAVE FAILED
             }
 
         }
-
-
 
 
         return $this->render('article/article.html.twig', [
