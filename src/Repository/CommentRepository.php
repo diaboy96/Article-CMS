@@ -19,6 +19,21 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+    public function fetchAllCommentsAndJoinUserName()
+    {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = '
+SELECT article_id, comment, name as user_name
+FROM `comment` com
+INNER JOIN `login` log
+ON com.user_id = log.id';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */
