@@ -14,9 +14,9 @@ class CommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('user_id', HiddenType::class)
-            ->add('article_id', HiddenType::class)
-            ->add('comment', TextType::class)
+            ->add('user_id', HiddenType::class, ['required' => true])
+            ->add('article_id', HiddenType::class, ['required' => true])
+            ->add('comment', TextType::class, ['required' => true])
         ;
     }
 
