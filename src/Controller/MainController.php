@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Entity\Comment;
 use App\Entity\Login;
+use App\Form\CommentType;
 use App\Form\LoginType;
 use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +30,7 @@ class MainController extends AbstractController
             $name = htmlspecialchars(strip_tags($form_data->getName()));
             $pass = hash('sha512', htmlspecialchars(strip_tags($form_data->getPass())));
 
-            $login = $this->login($name, $pass);
+            $login = $this->processLogin($name, $pass);
             if ($login['logged'] === true) {
                 $session->set('user_id', $login['user_id']);
                 $session->set('user_name', $login['user_name']);
@@ -43,7 +44,7 @@ class MainController extends AbstractController
         $user_name = $session->get('user_name');
         if (isset($user_id) && !empty($user_id) && isset($user_name) && !empty($user_name)){
 
-            return $this->logged_in($user_id, $user_name); // display view if user is logged
+            return $this->logged_in($user_id, $user_name, $request); // display view if user is logged
 
         } else {
 
@@ -53,7 +54,7 @@ class MainController extends AbstractController
 
     }
 
-    private function login($name, $pass)
+    private function processLogin($name, $pass)
     {
         $user = $this->getDoctrine()->getRepository(Login::class)->findOneBy(['name' => $name, 'pass' => $pass]);
         $message = '';
@@ -79,7 +80,7 @@ class MainController extends AbstractController
     /**
      * @Route("/logout", name="logout")
      */
-    public function logout()
+    public function processLogout()
     {
         $session = new Session();
         $session->clear();
@@ -87,9 +88,9 @@ class MainController extends AbstractController
         return $this->redirectToRoute('main', ['message' => 'Odhlášení proběhlo úspěšně']);
     }
 
-    private function logged_in($user_id, $user_name)
+    private function logged_in($user_id, $user_name, $request)
     {
-        return $this->showAllArticles();
+        return $this->showAllArticles($request, $user_id);
 /* todo uncomment
         return $this->render('main/logged_in.html.twig', [
             'user_name' => $user_name
@@ -103,10 +104,11 @@ class MainController extends AbstractController
         ]);
     }
 
-    private function showAllArticles()
+    private function showAllArticles(Request $request, $user_id)
     {
         $doctrine = $this->getDoctrine();
 
+        //get repositories
         $articles = $doctrine
             ->getRepository(Article::class)
             ->createQueryBuilder('a')
@@ -122,11 +124,49 @@ class MainController extends AbstractController
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
         // todo: join doesnt work ---> misto user_id vypsat uzivatelske jmeno
-        dump($articles, $comments);
+
+        // get CommentType field
+        $comment_form = $this->createForm(CommentType::class);
+        $comment_form->handleRequest($request);
+
+        if ($comment_form->isSubmitted() && $comment_form->isValid()) {
+            $form_data = $comment_form->getData();
+            $saved = $this->processSaveComment($doctrine, $user_id, $form_data);
+
+            if ($saved) {
+                //todo message frontend SAVED SUCCESSFUL
+                dump('saved');
+            } else {
+                dump('error');
+                //todo message frontend SAVE FAILED
+            }
+
+        }
+
+
+
 
         return $this->render('article/article.html.twig', [
             'articles' => $articles,
-            'comments' => $comments
+            'comments' => $comments,
+            'comment_form' => $comment_form->createView()
         ]);
+    }
+
+    private function processSaveComment($doctrine, $user_id, $form_data)
+    {
+        $comment_value = htmlspecialchars(strip_tags($form_data->getComment()));
+        $article_id = intval($form_data->getArticleId());
+
+        //save comment to db
+        $entityManager = $doctrine->getManager();
+        $comment = new Comment();
+        $comment->setArticleId($article_id);
+        $comment->setUserId($user_id);
+        $comment->setComment($comment_value);
+
+        $entityManager->persist($comment);
+        $entityManager->flush();
+        return true;
     }
 }
