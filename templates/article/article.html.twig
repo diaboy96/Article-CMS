@@ -142,7 +142,11 @@
 
                 {# COMMENT FORM #}
                 <div class="comment" style="bottom: 0;float: bottom">
-                        {# TODO: make formType and deploy it here #}
+                        {{form_start(comment_form)}}
+                        {{ form_widget(comment_form.article_id, {'attr': {'value': article['id']}}) }}
+                                <input type="submit" value="Odeslat">
+                        {{form_end(comment_form)}}
+                        AAAAAAAAAAA
                 </div>
                 {# /COMMENT FORM/ #}
 
