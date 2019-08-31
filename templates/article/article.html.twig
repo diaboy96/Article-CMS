@@ -146,7 +146,6 @@
                         {{ form_widget(comment_form.article_id, {'attr': {'value': article['id']}}) }}
                                 <input type="submit" value="Odeslat">
                         {{form_end(comment_form)}}
-                        AAAAAAAAAAA
                 </div>
                 {# /COMMENT FORM/ #}
 
@@ -156,7 +155,7 @@
 
                                 {% if comment['article_id'] == article['id'] %}
                                         <div class="comment-value">
-                                                <span style="color: #0f81cc;font-weight: bold">{{ comment['user_id'] }}: </span>
+                                                <span style="color: #0f81cc;font-weight: bold">{{ comment['user_name'] }}: </span>
                                                 <span>{{ comment['comment'] }}</span>
                                         </div>
                                 {% endif %}
