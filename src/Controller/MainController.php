@@ -117,13 +117,16 @@ class MainController extends AbstractController
         $comments = $doctrine
             ->getRepository(Comment::class)
             ->createQueryBuilder('c')
-            ->join(Login::class, 'l', 'WITH', 'c.user_id = l.id')
+            //->join(Login::class, 'l', 'WITH', 'c.user_id = l.id')
             ->addOrderBy('c.id', 'DESC')
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
-
+        // todo: join doesnt work ---> misto user_id vypsat uzivatelske jmeno
         dump($articles, $comments);
 
-        return $this->render('article/article.html.twig', ['articles' => $articles]);
+        return $this->render('article/article.html.twig', [
+            'articles' => $articles,
+            'comments' => $comments
+        ]);
     }
 }

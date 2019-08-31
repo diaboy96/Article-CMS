@@ -125,7 +125,6 @@
 {% for key, article in articles %}
 <div class='articleDiv'>
 
-
         <div class='topLine' id="{{ article['id'] }}">
                 {# ARTICLE HEADER #}
                 <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
@@ -149,14 +148,19 @@
 
                 {# COMMENTS #}
                 <div class="comment">
-                        <div class="comment-value">
-                                <span style="color: #0f81cc;font-weight: bold">{#{ comment_user_name }#}</span>
-                                {#{ comment_value }#}
-                        </div>
+                        {% for key, comment in comments %}
+
+                                {% if comment['article_id'] == article['id'] %}
+                                        <div class="comment-value">
+                                                <span style="color: #0f81cc;font-weight: bold">{{ comment['user_id'] }}: </span>
+                                                <span>{{ comment['comment'] }}</span>
+                                        </div>
+                                {% endif %}
+
+                        {% endfor %}
                 </div>
                 {# /COMMENTS/ #}
         </div>
-
 
 </div>
 {% endfor %}
