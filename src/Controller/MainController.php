@@ -90,7 +90,7 @@ class MainController extends AbstractController
 
     private function logged_in($user_id, $user_name, $request)
     {
-        return $this->showAllArticles($request, $user_id);
+        return $this->showAllArticlesWithComments($request, $user_id);
 /* todo uncomment
         return $this->render('main/logged_in.html.twig', [
             'user_name' => $user_name
@@ -104,11 +104,11 @@ class MainController extends AbstractController
         ]);
     }
 
-    private function showAllArticles(Request $request, $user_id)
+    private function showAllArticlesWithComments(Request $request, $user_id)
     {
         $doctrine = $this->getDoctrine();
 
-        //get repositories
+        //get article repository
         $articles = $doctrine
             ->getRepository(Article::class)
             ->createQueryBuilder('a')
@@ -116,17 +116,19 @@ class MainController extends AbstractController
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
 
+        // get comment repository
         $comments = $doctrine
             ->getRepository(Comment::class)
             ->fetchAllCommentsAndJoinUserName();
 
-        // get CommentType form
-        $arrayForms = [];
+        // generate CommentType forms
+        $comment_forms = [];
         foreach ($articles as $article) {
             $comment_form = $this->createForm(CommentType::class)->createView();
-            $arrayForms[$article['id']] = $comment_form;
+            $comment_forms[$article['id']] = $comment_form;
         }
-        dump($arrayForms);
+
+        // handle CommentType request
         $comment_form = $this->createForm(CommentType::class);
         $comment_form->handleRequest($request);
 
@@ -134,12 +136,11 @@ class MainController extends AbstractController
             $form_data = $comment_form->getData();
             $saved = $this->processSaveComment($doctrine, $user_id, $form_data);
 
-            if ($saved) {
+            if ($saved === true) {
                 //todo message frontend SAVED SUCCESSFUL
-                dump('saved');
-                return $this->redirectToRoute('main');
+                return $this->redirectToRoute('main'); // todo scroll to comment
             } else {
-                dump('error');
+                dump($saved);
                 //todo message frontend SAVE FAILED
             }
 
@@ -149,8 +150,8 @@ class MainController extends AbstractController
         return $this->render('article/article.html.twig', [
             'articles' => $articles,
             'comments' => $comments,
-            'arrayForms' => $arrayForms,
-            'comment_form' => $comment_form->createView()
+            'comment_forms' => $comment_forms,
+            'user_id' => $user_id
         ]);
     }
 
@@ -160,14 +161,21 @@ class MainController extends AbstractController
         $article_id = intval($form_data->getArticleId());
 
         //save comment to db
-        $entityManager = $doctrine->getManager();
-        $comment = new Comment();
-        $comment->setArticleId($article_id);
-        $comment->setUserId($user_id);
-        $comment->setComment($comment_value);
+        if (!empty($comment_value) && !empty($article_id)) {
+            // todo vytvorit podminky, pokud je uzivatel prihlasen
+            $entityManager = $doctrine->getManager();
+            $comment = new Comment();
+            $comment->setArticleId($article_id);
+            $comment->setUserId($user_id);
+            $comment->setComment($comment_value);
 
-        $entityManager->persist($comment);
-        $entityManager->flush();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+        } else {
+            $message = "Zadejte hodnotu komentare";
+
+            return $message;
+        }
         return true;
     }
 }

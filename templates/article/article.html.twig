@@ -18,13 +18,13 @@
 
                 {# COMMENT FORM #}
                 <div class="comment" style="bottom: 0;float: bottom">
-                        {{ form_start(arrayForms[article['id']]) }}
-                                {{ form_row(arrayForms[article['id']].user_id, {'id': 'comment_user_id_' ~ article['id']}) }}
-                                {{ form_row(arrayForms[article['id']].article_id, {'attr': {'value': article['id']}, 'id': 'comment_article_id_' ~ article['id']}) }}
-                                {{ form_row(arrayForms[article['id']].comment, {'id': 'comment_comment_' ~ article['id']}) }}
-                                {{ form_row(arrayForms[article['id']]._token, {'id': 'comment_token_' ~ article['id']}) }}
+                        {{ form_start(comment_forms[article['id']]) }}
+                                {{ form_row(comment_forms[article['id']].user_id, {'id': 'comment_user_id_' ~ article['id']}) }}
+                                {{ form_row(comment_forms[article['id']].article_id, {'attr': {'value': article['id']}, 'id': 'comment_article_id_' ~ article['id']}) }}
+                                {{ form_row(comment_forms[article['id']].comment, {'id': 'comment_comment_' ~ article['id']}) }}
+                                {{ form_row(comment_forms[article['id']]._token, {'id': 'comment_token_' ~ article['id']}) }}
                                 <input type="submit" value="Odeslat">
-                        {{ form_end(arrayForms[article['id']]) }}
+                        {{ form_end(comment_forms[article['id']]) }}
                 </div>
                 {# /COMMENT FORM/ #}
 
