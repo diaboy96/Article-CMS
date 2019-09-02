@@ -142,10 +142,10 @@
 
                 {# COMMENT FORM #}
                 <div class="comment" style="bottom: 0;float: bottom">
-                        {{form_start(comment_form)}}
-                        {{ form_widget(comment_form.article_id, {'attr': {'value': article['id']}}) }}
+                        {{ form_start(arrayForms[article['id']]) }}
+                        {{ form_widget(arrayForms[article['id']].article_id, {'attr': {'value': article['id']}}) }}
                                 <input type="submit" value="Odeslat">
-                        {{form_end(comment_form)}}
+                        {{ form_end(arrayForms[article['id']]) }}
                 </div>
                 {# /COMMENT FORM/ #}
 

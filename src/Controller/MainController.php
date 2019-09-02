@@ -121,6 +121,12 @@ class MainController extends AbstractController
             ->fetchAllCommentsAndJoinUserName();
 
         // get CommentType form
+        $arrayForms = [];
+        foreach ($articles as $article) {
+            $comment_form = $this->createForm(CommentType::class)->createView();
+            $arrayForms[$article['id']] = $comment_form;
+        }
+        dump($arrayForms);
         $comment_form = $this->createForm(CommentType::class);
         $comment_form->handleRequest($request);
 
@@ -143,6 +149,7 @@ class MainController extends AbstractController
         return $this->render('article/article.html.twig', [
             'articles' => $articles,
             'comments' => $comments,
+            'arrayForms' => $arrayForms,
             'comment_form' => $comment_form->createView()
         ]);
     }
