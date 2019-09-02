@@ -27,7 +27,8 @@ class CommentRepository extends ServiceEntityRepository
 SELECT article_id, comment, name as user_name
 FROM `comment` com
 INNER JOIN `login` log
-ON com.user_id = log.id';
+ON com.user_id = log.id
+ORDER BY com.id DESC';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
 
