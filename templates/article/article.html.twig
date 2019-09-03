@@ -31,18 +31,21 @@
                 {# COMMENTS #}
                 <div class="comment">
                         {% for key, comment in comments %}
-
                                 {% if comment['article_id'] == article['id'] %}
                                         <div class="comment-value">
                                                 <span style="color: #0f81cc;font-weight: bold">{{ comment['user_name'] }}: </span>
                                                 <span>{{ comment['comment'] }}</span>
+
+                                                {% if user_id == comment['user_id'] %}
+                                                        <a href="{{ path('comment_edit') }}/{{ comment['id'] }}" title="Upravit komentář">EDIT</a> {# todo js form instead of comment #}
+                                                         |
+                                                        <a href='{{ path('comment_remove') }}/{{ comment['id'] }}' title="Vymazat komentář">DELETE</a> {# todo remodal "really delete?" #}
+                                                {% endif %}
                                         </div>
                                 {% endif %}
-
                         {% endfor %}
                 </div>
                 {# /COMMENTS/ #}
         </div>
-
 </div>
 {% endfor %}
