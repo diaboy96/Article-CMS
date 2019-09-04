@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
@@ -39,6 +41,7 @@ class ArticleController extends AbstractController
         if ($article_id !== 'not_set') {
             $article_id = intval($article_id);
         }
+        // todo
         
         return $this->render('article/article_detail.html.twig', [
             'controller_name' => 'ArticleController',
@@ -60,7 +63,53 @@ class ArticleController extends AbstractController
      */
     public function removeComment($comment_id)
     {
-        // TODO!!!
-        dump('remove', $comment_id);
+        if ($comment_id !== 'not_set') {
+            $message_type = '';
+            $session = new Session();
+            $user_id = $session->get('user_id');
+            $doctrine = $this->getDoctrine();
+
+            $comment = $doctrine
+                ->getRepository(Comment::class)
+                ->findOneBy([
+                    'id' => intval($comment_id),
+                    'user_id' => $user_id
+                ]);
+
+            if ($comment) { // comment is owned by currently user
+                $entityManager = $doctrine->getManager();
+                $entityManager->remove($comment);
+                $entityManager->flush();
+
+                $message = 'Komentář byl úspěšně vymazán.';
+                $message_type = 'success';
+            } else {
+                $comment = $doctrine
+                    ->getRepository(Comment::class)
+                    ->findOneBy([
+                        'id' => intval($comment_id)
+                    ]);
+
+                if ($comment) { // comment exist but is not owned by currently logged user
+                    $message = "Nelze smazat komentář, jekož autorem je jiný uživatel.";
+                } else { // comment was not found in database
+                    $message = "Komentář nebyl nalezen v databázi.";
+                }
+
+            }
+
+        } else {
+            $message = "Id komentáře se v URL adrese nenachází";
+        }
+
+        if ($message_type !== 'success') {
+            $message_type = 'failure';
+        }
+        $url = $this->generateUrl('main', [
+            'message' => $message,
+            'message_type' => $message_type
+        ]);
+
+        return $this->redirect($url); // todo use get parameters in URL to display remodal (or message) of performed action
     }
 }

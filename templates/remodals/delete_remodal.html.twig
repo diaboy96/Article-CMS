@@ -2,9 +2,9 @@
 {% block remodal_class %}delete{% endblock %}
 {% block remodal_id %}delete{% endblock %}
 {% block remodal_title %}Vymazat{% endblock %}
-{% block remodal_content %}Jste si jisti, že chcete vymazat?{% endblock %}
+{% block remodal_content %}Opravdu si přejete toto vymazat?{% endblock %}
 {% block remodal_cancel_button %}Ne{% endblock %}
 {% block remodal_confirm_button %}Ano{% endblock %}
 {% block remodal_confirm_link %}
-    {{ delete_link }}
+    {{ path('comment_remove') }}/{{ app.request.get('comment_id') }}
 {% endblock %}

@@ -90,7 +90,7 @@ class MainController extends AbstractController
 
     private function logged_in($user_id, $user_name, $request)
     {
-        return $this->showAllArticlesWithComments($request, $user_id);
+        return $this->showAllArticlesWithComments($request, $user_id, $user_name);
 /* todo uncomment
         return $this->render('main/logged_in.html.twig', [
             'user_name' => $user_name
@@ -104,7 +104,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    private function showAllArticlesWithComments(Request $request, $user_id)
+    private function showAllArticlesWithComments(Request $request, $user_id, $user_name)
     {
         $doctrine = $this->getDoctrine();
 
@@ -147,11 +147,12 @@ class MainController extends AbstractController
         }
 
 
-        return $this->render('article/article.html.twig', [
+        return $this->render('main/logged_in.html.twig', [
             'articles' => $articles,
             'comments' => $comments,
             'comment_forms' => $comment_forms,
-            'user_id' => $user_id
+            'user_id' => $user_id,
+            'user_name' => $user_name
         ]);
     }
 
@@ -162,7 +163,7 @@ class MainController extends AbstractController
 
         //save comment to db
         if (!empty($comment_value) && !empty($article_id)) {
-            // todo vytvorit podminky, pokud je uzivatel prihlasen
+            // todo vytvorit podminky, pokud je uzivatel prihlasen (placeholder na frontendovem inputu)
             $entityManager = $doctrine->getManager();
             $comment = new Comment();
             $comment->setArticleId($article_id);
