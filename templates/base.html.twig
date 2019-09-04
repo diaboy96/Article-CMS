@@ -5,7 +5,10 @@
         <title>{% block title %}Article CMS{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{ asset('css/bulma.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/topBar.css') }}">
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_default_user.css') }}">
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_user.css') }}">
+        {% endblock %}
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     </head>
     <body>
@@ -38,6 +41,8 @@
             {{ include('remodals/delete_remodal.html.twig') }}
         {% endblock %}
 
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            <script src="{{ asset('js/remodal_user.js') }}"></script>
+        {% endblock %}
     </body>
 </html>
