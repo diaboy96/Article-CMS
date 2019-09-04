@@ -4,11 +4,12 @@
 {% block remodal_title %}Upravit komentář{% endblock %}
 {% block remodal_content %}
     <form method="post" action="{{ path('comment_edit', {'comment_id': app.request.get('comment_id')}) }}">
-        <input type="text" placeholder="Hodnota komentáře">
-{% endblock %}
+        <label>
+            <input type="text" value="{{ app.request.get('comment_value') }}">
+        </label>
+        {% endblock %}
 {% block remodal_cancel_button %}Zrušit{% endblock %}
-{% block remodal_confirm_button %}Upravit{% endblock %}
-{% block remodal_confirm_link %}
-        <input type="submit" value="Upravit">
+{% block remodal_confirm_button %}
+        <input type="submit" value="Upravit" class="remodal-confirm">
     </form>
 {% endblock %}
