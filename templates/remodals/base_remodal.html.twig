@@ -8,5 +8,7 @@
     </div>
     <br>
     <button data-remodal-action="cancel" class="remodal-cancel">{% block remodal_cancel_button %}{% endblock %}</button>
-    <a href="{% block remodal_confirm_link %}{% endblock %}" class="remodal-confirm" style="color: white; text-decoration: none">{% block remodal_confirm_button %}{% endblock %}</a>
+    {% block remodal_confirm_button %}
+        <a href="{% block remodal_confirm_link %}{% endblock %}" class="remodal-confirm" style="color: white; text-decoration: none">{% block remodal_confirm_button_text %}{% endblock %}</a>
+    {% endblock %}
 </div>

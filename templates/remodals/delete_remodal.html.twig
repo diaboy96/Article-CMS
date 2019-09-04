@@ -4,7 +4,7 @@
 {% block remodal_title %}Vymazat{% endblock %}
 {% block remodal_content %}Opravdu si přejete toto vymazat?{% endblock %}
 {% block remodal_cancel_button %}Ne{% endblock %}
-{% block remodal_confirm_button %}Ano{% endblock %}
+{% block remodal_confirm_button_text %}Ano{% endblock %}
 {% block remodal_confirm_link %}
     {{ path('comment_remove') }}/{{ app.request.get('comment_id') }}
 {% endblock %}

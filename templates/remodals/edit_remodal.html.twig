@@ -3,9 +3,9 @@
 {% block remodal_id %}edit{% endblock %}
 {% block remodal_title %}Upravit komentář{% endblock %}
 {% block remodal_content %}
-    <form method="post" action="{{ path('comment_edit', {'comment_id': app.request.get('comment_id')}) }}">
+    <form method="get" action="{{ path('comment_edit', {'comment_id': app.request.get('comment_id')}) }}">
         <label>
-            <input type="text" value="{{ app.request.get('comment_value') }}">
+            <input type="text" value="{{ app.request.get('comment_value') }}" name="edit_comment_value">
         </label>
         {% endblock %}
 {% block remodal_cancel_button %}Zrušit{% endblock %}
