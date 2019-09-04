@@ -1,0 +1,14 @@
+{% block remodal %}
+    <div class="remodal {{ remodal_name }}" data-remodal-id="{{ remodal_name }}" role="dialog">
+        <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+        <div>
+            <h2 class="modal3Title">{{ remodal_title }}</h2>
+            <div class="modal3Desc">
+                {{ remodal_text }}
+            </div>
+        </div>
+        <br>
+        <button data-remodal-action="cancel" class="remodal-cancel">{{ remodal_cancel_button }}</button>
+        <a href="{{ remodal_confirm_link }}" class="remodal-confirm" style="color: white; text-decoration: none">{{ remodal_confirm_button }}</a>
+    </div>
+{% endblock %}
