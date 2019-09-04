@@ -1,0 +1,15 @@
+{% extends 'remodals/base_remodal.html.twig' %}
+{% block remodal_class %}edit{% endblock %}
+{% block remodal_id %}edit{% endblock %}
+{% block remodal_title %}Upravit komentář{% endblock %}
+{% block remodal_content %}
+    <form method="post" action="{{ path('comment_edit', {'comment_id': app.request.get('comment_id')}) }}">
+        <input type="text" placeholder="Hodnota komentáře">
+{% endblock %}
+{% block remodal_cancel_button %}Zrušit{% endblock %}
+{% block remodal_confirm_button %}Upravit{% endblock %}
+{% block remodal_confirm_link %}
+        <input type="submit" value="Upravit">
+    </form>
+    {{ form_end(comment_form) }}
+{% endblock %}
