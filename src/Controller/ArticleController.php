@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -50,12 +52,36 @@ class ArticleController extends AbstractController
 
     /**
      * @Route("/editComment/{comment_id}", name="comment_edit", defaults={"comment_id" = "not_set"})
+     * @param $comment_id
+     * @param Request $request
      */
-    public function editComment($comment_id)
+    public function editComment($comment_id, Request $request)
     {
-        dump('edit', $comment_id);
-        // TODO: make ajax form input instead of comment text
-        //todo HERE validate data and save it to db (try using ajax)
+        $session = new Session();
+        $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id);
+
+        if ($comment['is_owned_by_user']) {
+            dump('ff');
+            // TODO: make form input in remodal window
+            //todo save data from form to db
+            $comment_form = $this->createForm(CommentType::class);
+            $comment_form->handleRequest($request);
+
+            if ($comment_form->isSubmitted() && $comment_form->isValid()) {
+                dump('bingo');
+            }
+
+            return $this->render('remodals/edit_remodal.html.twig', [
+                'comment_form' => $comment_form->createView()
+            ]);
+        } else {
+            $url = $this->generateUrl('main', [
+                'message' => $comment['message'],
+                'message_type' => 'failure'
+            ]);
+
+            return $this->redirect($url); // todo use get parameters in URL to display remodal (or message) of performed action
+        }
     }
 
     /**
@@ -63,53 +89,60 @@ class ArticleController extends AbstractController
      */
     public function removeComment($comment_id)
     {
-        if ($comment_id !== 'not_set') {
-            $message_type = '';
-            $session = new Session();
-            $user_id = $session->get('user_id');
-            $doctrine = $this->getDoctrine();
+        $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id);
 
-            $comment = $doctrine
-                ->getRepository(Comment::class)
-                ->findOneBy([
-                    'id' => intval($comment_id),
-                    'user_id' => $user_id
-                ]);
+        if ($comment['is_owned_by_user']) {
+            $entityManager =  $this->getDoctrine()->getManager();
+            $entityManager->remove($comment['comment']);
+            $entityManager->flush();
 
-            if ($comment) { // comment is owned by currently user
-                $entityManager = $doctrine->getManager();
-                $entityManager->remove($comment);
-                $entityManager->flush();
-
-                $message = 'Komentář byl úspěšně vymazán.';
-                $message_type = 'success';
-            } else {
-                $comment = $doctrine
-                    ->getRepository(Comment::class)
-                    ->findOneBy([
-                        'id' => intval($comment_id)
-                    ]);
-
-                if ($comment) { // comment exist but is not owned by currently logged user
-                    $message = "Nelze smazat komentář, jekož autorem je jiný uživatel.";
-                } else { // comment was not found in database
-                    $message = "Komentář nebyl nalezen v databázi.";
-                }
-
-            }
-
+            $message = 'Komentář byl úspěšně vymazán.';
+            $message_type = 'success';
         } else {
-            $message = "Id komentáře se v URL adrese nenachází";
-        }
-
-        if ($message_type !== 'success') {
+            $message = $comment['message'];
             $message_type = 'failure';
         }
+
         $url = $this->generateUrl('main', [
             'message' => $message,
             'message_type' => $message_type
         ]);
 
         return $this->redirect($url); // todo use get parameters in URL to display remodal (or message) of performed action
+    }
+
+    protected function checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id)
+    {
+
+        $session = new Session();
+        $user_id = $session->get('user_id');
+        $doctrine = $this->getDoctrine();
+
+        $comment = $doctrine
+            ->getRepository(Comment::class)
+            ->findOneBy([
+                'id' => intval($comment_id),
+                'user_id' => $user_id
+            ]);
+
+        if ($comment) { // comment is owned by currently user
+            return ['is_owned_by_user' => true, 'comment' => $comment];
+        } else {
+            $comment = $doctrine
+                ->getRepository(Comment::class)
+                ->findOneBy([
+                    'id' => intval($comment_id)
+                ]);
+
+            if ($comment) { // comment exist but is not owned by currently logged user
+                $message = "Nelze pracovat s komentářem, jekož autorem je jiný uživatel.";
+
+                return ['is_owned_by_user' => false, 'message' => $message];
+            } else { // comment was not found in database
+                $message = "Komentář nebyl nalezen v databázi.";
+
+                return ['is_owned_by_user' => false, 'message' => $message];
+            }
+        }
     }
 }

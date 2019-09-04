@@ -37,7 +37,7 @@
                                                 <span>{{ comment['comment'] }}</span>
 
                                                 {% if user_id is defined and user_id == comment['user_id'] or is_admin is defined and is_admin == true %}
-                                                        <a href="{{ path('comment_edit') }}/{{ comment['id'] }}" title="Upravit komentář">EDIT</a> {# todo js form instead of comment #}
+                                                        <a href="{{ path('main') }}?comment_id={{ comment['id'] }}#edit" title="Upravit komentář">EDIT</a>
                                                          |
                                                         <a href='{{ path('main') }}?comment_id={{ comment['id'] }}#delete' title="Vymazat komentář">DELETE</a>
                                                 {% endif %}
