@@ -1,0 +1,9 @@
+{% extends 'remodals/base_remodal.html.twig' %}
+{% block remodal_name %}delete{% endblock %}
+{% block remodal_title %}Vymazat{% endblock %}
+{% block remodal_content %}Jste si jisti, že chcete vymazat?{% endblock %}
+{% block remodal_cancel_button %}Ne{% endblock %}
+{% block remodal_confirm_button %}Ano{% endblock %}
+{% block remodal_confirm_link %}
+    {{ delete_link }}
+{% endblock %}
