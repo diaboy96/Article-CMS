@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
-use App\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,38 +54,38 @@ class ArticleController extends AbstractController
      * @Route("/editComment/{comment_id}", name="comment_edit", defaults={"comment_id" = "not_set"})
      * @param $comment_id
      * @param Request $request
+     * @return RedirectResponse
      */
     public function editComment($comment_id, Request $request)
     {
-        $session = new Session();
         $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id);
 
         if ($comment['is_owned_by_user']) {
-            dump('ff');
-            // TODO: make form input in remodal window
-            //todo save data from form to db
-            $comment_form = $this->createForm(CommentType::class);
-            $comment_form->handleRequest($request);
+            $entityManager =  $this->getDoctrine()->getManager();
 
-            if ($comment_form->isSubmitted() && $comment_form->isValid()) {
-                dump('bingo');
-            }
+            $comment['comment']->setComment($request->query->get('edit_comment_value'));
+            $entityManager->persist($comment['comment']);
+            $entityManager->flush();
 
-            return $this->render('remodals/edit_remodal.html.twig', [
-                'comment_form' => $comment_form->createView()
-            ]);
+            $message = 'Komentář byl úspěšně upraven.';
+            $message_type = 'success';
         } else {
-            $url = $this->generateUrl('main', [
-                'message' => $comment['message'],
-                'message_type' => 'failure'
-            ]);
-
-            return $this->redirect($url); // todo use get parameters in URL to display remodal (or message) of performed action
+            $message = $comment['message'];
+            $message_type = 'failure';
         }
+
+        $url = $this->generateUrl('main', [
+            'message' => $message,
+            'message_type' => $message_type
+        ]);
+
+        return $this->redirect($url); // todo use get parameters in URL to display remodal (or message) of performed action
     }
 
     /**
      * @Route("/removeComment/{comment_id}", name="comment_remove", defaults={"comment_id" = "not_set"})
+     * @param $comment_id
+     * @return RedirectResponse
      */
     public function removeComment($comment_id)
     {
@@ -111,6 +111,10 @@ class ArticleController extends AbstractController
         return $this->redirect($url); // todo use get parameters in URL to display remodal (or message) of performed action
     }
 
+    /**
+     * @param $comment_id
+     * @return array
+     */
     protected function checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id)
     {
 
