@@ -35,6 +35,22 @@ ORDER BY com.id DESC';
         return $stmt->fetchAll();
     }
 
+    public function fetchCommentsByArticleIdAndJoinUserName($article_id)
+    {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = '
+SELECT com.id as id, article_id, user_id, comment, name as user_name
+FROM `comment` com
+INNER JOIN `login` log
+ON com.user_id = log.id
+WHERE article_id = '.$article_id.'
+ORDER BY com.id DESC';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */
