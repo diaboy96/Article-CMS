@@ -1,0 +1,49 @@
+{% extends 'main/logged_in.html.twig' %}
+
+{% block body %}
+    <div id="site">
+        <div id="content">
+            <div class='article articlearticle'>
+                <div class='topLine'>
+                    <span class='kategorie articleheadline' title='kategorie'>
+                        {{ article_header }}
+                    </span>
+                </div>
+
+                <div class='bottomLine'>
+                    <p class='articlecontent'>
+                        {{ article_content | raw}}
+                    </p>
+
+
+                    <div class="comment" style="bottom: 0;float: bottom">
+                        {{ form_start(comment_form) }}
+                            {{ form_row(comment_form.article_id, {'attr': {'value': article_id} }) }}
+                            {{ form_row(comment_form.comment, {'label': false}) }}
+                            <input type="submit" value="Odeslat">
+                        {{ form_end(comment_form) }}
+                        {#todo change placeholder if user is not logged (by user id)#}
+                    </div>
+                    {% if comments is defined and comments is not empty %}
+                        <div class="comments">
+                            {% for index, comment in comments %}
+                                <div class="comment-value">
+                                    <span style="color: #0f81cc;font-weight: bold">
+                                        {{ comment['user_name'] }}
+                                    </span>
+                                    {{ comment['comment'] }}
+
+                                    {% if user_id is defined and user_id == comment['user_id'] %}
+                                        <a href="{{ path('main') }}?comment_id={{ comment['id'] }}&comment_value={{ comment['comment'] }}#edit" title="Upravit komentář">EDIT</a>
+                                        |
+                                        <a href='{{ path('main') }}?comment_id={{ comment['id'] }}#delete' title="Vymazat komentář">DELETE</a>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

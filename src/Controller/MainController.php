@@ -99,7 +99,7 @@ class MainController extends AbstractController
 
     private function logged_out($login_form)
     {
-        return $this->render('main/index.html.twig', [ //todo add articles to this template (make new base template and extend it)
+        return $this->render('base.html.twig', [ //todo add articles to this template (make new base template and extend it)
             'login_form' => $login_form->createView()
         ]);
     }
@@ -156,7 +156,7 @@ class MainController extends AbstractController
         ]);
     }
 
-    private function processSaveComment($doctrine, $user_id, $form_data)
+    public function processSaveComment($doctrine, $user_id, $form_data)
     {
         $comment_value = htmlspecialchars(strip_tags($form_data->getComment()));
         $article_id = intval($form_data->getArticleId());

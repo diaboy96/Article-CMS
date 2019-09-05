@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
 use App\Entity\Comment;
+use App\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,16 +40,63 @@ class ArticleController extends AbstractController
     /**
      * @Route("/articleDetail/{article_id}", name="article_detail", defaults={"article_id" = "not_set"})
      */
-    public function articleDetail($article_id)
+    public function articleDetail($article_id, Request $request)
     {
         if ($article_id !== 'not_set') {
+            $doctrine = $this->getDoctrine();
             $article_id = intval($article_id);
+            $article = $doctrine
+                ->getRepository(Article::class)
+                ->findOneBy([
+                    'id' => $article_id
+                ]);
+
+            if ($article) {
+                $article_header = $article->getHeader();
+                $article_content = $article->getContent();
+                $comments = $doctrine
+                    ->getRepository(Comment::class)
+                    ->fetchCommentsByArticleIdAndJoinUserName($article_id);
+
+                $session = new Session();
+                $user_id = $session->get('user_id');
+                $user_name = $session->get('user_name');
+
+                // comment form (for creating new comment)
+                $comment_form = $this->createForm(CommentType::class);
+                $comment_form->handleRequest($request);
+
+                if ($comment_form->isSubmitted() && $comment_form->isValid()) {
+                    $form_data = $comment_form->getData();
+                    $MainController = new MainController();
+                    $saved = $MainController->processSaveComment($doctrine, $user_id, $form_data);
+                    if ($saved === true) {
+                        $message = 'Komentář byl úspěšně vytvořen.';
+                    } else {
+                        $message = $saved;
+                    }
+                    $url = $this->generateUrl('article_detail');
+                    return $this->redirect($url.'/'.$article_id.'?message='.$message);
+                }
+
+                return $this->render('article/article_detail.html.twig', [
+                    'article_id' => $article_id,
+                    'article_header' => $article_header,
+                    'article_content' => $article_content,
+                    'comments' => $comments,
+                    'user_id' => $user_id,
+                    'user_name' => $user_name,
+                    'button_back' => true,
+                    'comment_form' => $comment_form->createView()
+                ]);
+            } else {
+                $message = "Článek nebyl nalezen v databázi.";
+            }
+        } else {
+            $message = "V URL adrese se nenachází id článku";
         }
-        // todo
-        
-        return $this->render('article/article_detail.html.twig', [
-            'controller_name' => 'ArticleController',
-        ]);
+
+        return $this->redirectToRoute('main', ['message' => $message]);
     }
 
     /**
