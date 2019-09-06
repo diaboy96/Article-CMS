@@ -75,7 +75,7 @@ class MainController extends AbstractController
                 }
             }
 
-            return $this->render('main/logged_in.html.twig', [
+            return $this->render('main/index.html.twig', [
                 'articles' => $articles_and_comments['articles'],
                 'comments' => $articles_and_comments['comments'],
                 'comment_forms' => $comment_forms,
@@ -85,7 +85,7 @@ class MainController extends AbstractController
 
         } else { // user is NOT LOGGED in
 
-            return $this->render('main/logged_in.html.twig', [
+            return $this->render('main/index.html.twig', [
                 'articles' => $articles_and_comments['articles'],
                 'comments' => $articles_and_comments['comments'],
                 'login_form' => $login_form->createView()
