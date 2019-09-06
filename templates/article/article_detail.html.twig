@@ -1,5 +1,23 @@
 {% extends 'main/index.html.twig' %}
 
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    {% if comment_form is defined %}
+        .comments {
+            margin: 93px 0 0 30px;
+        }
+    {% endif %}
+
+    form input[type=submit] {
+        float: left;
+    }
+    #content {
+        margin-top: 1.5%;
+    }
+</style>
+{% endblock %}
+
 {% block body %}
     <div id="site">
         <div id="content">
@@ -16,11 +34,11 @@
                     </p>
 
 
-                    <div class="comment" style="bottom: 0;float: bottom">
+                    <div class="comment" >
                         {% if comment_form is defined %}
                             {{ form_start(comment_form) }}
                                 {{ form_row(comment_form.article_id, {'attr': {'value': article_id} }) }}
-                                {{ form_row(comment_form.comment, {'label': false}) }}
+                                {{ form_row(comment_form.comment, {'label': false, 'attr': {'placeholder': 'napište komentář'}}) }}
                                 <input type="submit" value="Odeslat">
                             {{ form_end(comment_form) }}
                         {% else %}

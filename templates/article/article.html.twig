@@ -23,7 +23,7 @@
                                         {{ form_row(comment_forms[article['id']].user_id, {'id': 'comment_user_id_' ~ article['id']}) }}
                                         {{ form_row(comment_forms[article['id']].article_id, {'attr': {'value': article['id']}, 'id': 'comment_article_id_' ~ article['id']}) }}
                                         {{ form_row(comment_forms[article['id']]._token, {'id': 'comment_token_' ~ article['id']}) }}
-                                        {{ form_row(comment_forms[article['id']].comment, {'id': 'comment_comment_' ~ article['id'], 'label': false}) }}
+                                        {{ form_row(comment_forms[article['id']].comment, {'id': 'comment_comment_' ~ article['id'], 'label': false, 'attr': {'placeholder': 'napište komentář'}}) }}
                                         <input type="submit" value="Odeslat">
                                 {{ form_end(comment_forms[article['id']]) }}
                         {% else %}

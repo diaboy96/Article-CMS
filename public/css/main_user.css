@@ -29,6 +29,9 @@ body {
     margin-bottom: 16px;
 }
 /* main article design */
+.articleDiv:first-of-type {
+    margin-top: 17px;
+}
 .articleDiv {
     width: 530px;
     margin: 0 auto;
@@ -36,10 +39,11 @@ body {
 .comment {
     margin-top: 12px;
 }
-.comment form input{
+.comment form input {
     padding: 8px;
 }
-.comment form input[type=text]{
+.comment form input[type=text] {
+    float: left;
     width: 78%;
 }
 .comment-value {
