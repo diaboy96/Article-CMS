@@ -41,7 +41,8 @@ class MainController extends AbstractController
                 $session->set('user_id', $login['user_id']);
                 $session->set('user_name', $login['user_name']);
             } elseif ($login['logged'] === false) {
-                dump($login['message']); // todo message to frontend - Login False
+                return $this->redirectToRoute('main', ['message' => $login['message']]);
+                // todo message to frontend - Login False
             }
 
         }
@@ -68,9 +69,11 @@ class MainController extends AbstractController
 
                 if ($saved === true) {
                     //todo message frontend SAVED SUCCESSFUL
-                    return $this->redirectToRoute('main'); // todo scroll to comment
+                    $article_id = $form_data->getArticleId();
+                    $url = $this->generateUrl('main');
+                    return $this->redirect($url.'?message=Komentář byl úspěšně uložen#'.$article_id);
                 } else {
-                    dump($saved);
+                    return $this->redirectToRoute('main', ['message' => $saved]);
                     //todo message frontend SAVE FAILED
                 }
             }
