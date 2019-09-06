@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('css/main_user.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_default_user.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_user.css') }}">
 {% endblock %}
 
 {% block navbar_left %}
@@ -11,7 +12,9 @@
         <a href="{{ path('main') }}#{{ article_id }}" title="Zpět na hlavní stránku">
             <img src="{{ asset('svg/arrow_left.svg') }}" alt="back_icon" style="margin-bottom: -5.5px">
         </a>
-        {#todo back to article (scrolltop)#}
+    {% elseif user_name is not defined %}
+        Ještě nemáte účet?
+        <a href="{{ path('registration') }}"> Zaregistrujte se</a>
     {% endif %}
 
 {% endblock %}
@@ -33,6 +36,7 @@
         {% endif %}
 
     {% endif %}
+
 {% endblock %}
 
 {% block body %}

@@ -5,32 +5,20 @@
         <title>{% block title %}Article CMS{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{ asset('css/bulma.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/topBar.css') }}">
-        {% block stylesheets %}
-            <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_default_user.css') }}">
-            <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_user.css') }}">
-        {% endblock %}
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        {% block stylesheets %}{% endblock %}
     </head>
     <body>
         {% block navbar %}
             <nav class="navbar" aria-label="main navigation">
                 <div class="navbar-start">
                     <span class="navbar-item">
-                        {% block navbar_left %}
-                            Ještě nemáte účet?
-                                <a href="{{ path('registration') }}"> Zaregistrujte se</a>
-                        {% endblock navbar_left %}
+                        {% block navbar_left %}{% endblock navbar_left %}
                     </span>
                 </div>
 
                 <div class="navbar-end">
                     <div class="navbar-item">
-                        {% block navbar_right %}
-                            {{ form_start(login_form) }}
-                            {{ form_widget(login_form) }}
-                                <input type="submit" value="Přihlásit se">
-                            {{ form_end(login_form) }}
-                        {% endblock %}
+                        {% block navbar_right %}{% endblock %}
                     </div>
                 </div>
             </nav>
@@ -43,6 +31,7 @@
         {% endblock %}
 
         {% block javascripts %}
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
             <script src="{{ asset('js/remodal_user.js') }}"></script>
         {% endblock %}
     </body>

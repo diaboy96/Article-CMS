@@ -9,7 +9,9 @@ use App\Form\CommentType;
 use App\Form\LoginType;
 use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,6 +19,8 @@ class MainController extends AbstractController
 {
     /**
      * @Route("/", name="main")
+     * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function index(Request $request)
     {
@@ -42,18 +46,60 @@ class MainController extends AbstractController
 
         $user_id = $session->get('user_id');
         $user_name = $session->get('user_name');
-        if (isset($user_id) && !empty($user_id) && isset($user_name) && !empty($user_name)){
+        $articles_and_comments = $this->getAllArticlesWithComments();
+        if (isset($user_id) && !empty($user_id) && isset($user_name) && !empty($user_name)){ // user is LOGGED IN
 
-            return $this->logged_in($user_id, $user_name, $request); // display view if user is logged
 
-        } else {
 
-            return $this->logged_out($login_form); // display view if user is not logged
+            // generate CommentType forms
+            $comment_forms = [];
+            foreach ($articles_and_comments['articles'] as $article) {
+                $comment_form = $this->createForm(CommentType::class)->createView();
+                $comment_forms[$article['id']] = $comment_form;
+            }
+
+            // handle CommentType request
+            $comment_form = $this->createForm(CommentType::class);
+            $comment_form->handleRequest($request);
+
+            if ($comment_form->isSubmitted() && $comment_form->isValid()) {
+                $form_data = $comment_form->getData();
+                $saved = $this->processSaveComment($user_id, $form_data);
+
+                if ($saved === true) {
+                    //todo message frontend SAVED SUCCESSFUL
+                    return $this->redirectToRoute('main'); // todo scroll to comment
+                } else {
+                    dump($saved);
+                    //todo message frontend SAVE FAILED
+                }
+            }
+
+            return $this->render('main/logged_in.html.twig', [
+                'articles' => $articles_and_comments['articles'],
+                'comments' => $articles_and_comments['comments'],
+                'comment_forms' => $comment_forms,
+                'user_id' => $user_id,
+                'user_name' => $user_name
+            ]);
+
+        } else { // user is NOT LOGGED in
+
+            return $this->render('main/logged_in.html.twig', [
+                'articles' => $articles_and_comments['articles'],
+                'comments' => $articles_and_comments['comments'],
+                'login_form' => $login_form->createView()
+            ]);
 
         }
 
     }
 
+    /**
+     * @param $name
+     * @param $pass
+     * @return array
+     */
     private function processLogin($name, $pass)
     {
         $user = $this->getDoctrine()->getRepository(Login::class)->findOneBy(['name' => $name, 'pass' => $pass]);
@@ -79,6 +125,7 @@ class MainController extends AbstractController
 
     /**
      * @Route("/logout", name="logout")
+     * @return RedirectResponse
      */
     public function processLogout()
     {
@@ -88,23 +135,10 @@ class MainController extends AbstractController
         return $this->redirectToRoute('main', ['message' => 'Odhlášení proběhlo úspěšně']);
     }
 
-    private function logged_in($user_id, $user_name, $request)
-    {
-        return $this->showAllArticlesWithComments($request, $user_id, $user_name);
-/* todo uncomment
-        return $this->render('main/logged_in.html.twig', [
-            'user_name' => $user_name
-        ]);*/
-    }
-
-    private function logged_out($login_form)
-    {
-        return $this->render('base.html.twig', [ //todo add articles to this template (make new base template and extend it)
-            'login_form' => $login_form->createView()
-        ]);
-    }
-
-    private function showAllArticlesWithComments(Request $request, $user_id, $user_name)
+    /**
+     * @return array
+     */
+    private function getAllArticlesWithComments()
     {
         $doctrine = $this->getDoctrine();
 
@@ -121,50 +155,25 @@ class MainController extends AbstractController
             ->getRepository(Comment::class)
             ->fetchAllCommentsAndJoinUserName();
 
-        // generate CommentType forms
-        $comment_forms = [];
-        foreach ($articles as $article) {
-            $comment_form = $this->createForm(CommentType::class)->createView();
-            $comment_forms[$article['id']] = $comment_form;
-        }
-
-        // handle CommentType request
-        $comment_form = $this->createForm(CommentType::class);
-        $comment_form->handleRequest($request);
-
-        if ($comment_form->isSubmitted() && $comment_form->isValid()) {
-            $form_data = $comment_form->getData();
-            $saved = $this->processSaveComment($doctrine, $user_id, $form_data);
-
-            if ($saved === true) {
-                //todo message frontend SAVED SUCCESSFUL
-                return $this->redirectToRoute('main'); // todo scroll to comment
-            } else {
-                dump($saved);
-                //todo message frontend SAVE FAILED
-            }
-
-        }
-
-
-        return $this->render('main/logged_in.html.twig', [
+        return [
             'articles' => $articles,
-            'comments' => $comments,
-            'comment_forms' => $comment_forms,
-            'user_id' => $user_id,
-            'user_name' => $user_name
-        ]);
+            'comments' => $comments
+        ];
     }
 
-    public function processSaveComment($doctrine, $user_id, $form_data)
+    /**
+     * @param $user_id
+     * @param $form_data
+     * @return bool|string
+     */
+    public function processSaveComment($user_id, $form_data)
     {
         $comment_value = htmlspecialchars(strip_tags($form_data->getComment()));
         $article_id = intval($form_data->getArticleId());
 
         //save comment to db
         if (!empty($comment_value) && !empty($article_id)) {
-            // todo vytvorit podminky, pokud je uzivatel prihlasen (placeholder na frontendovem inputu)
-            $entityManager = $doctrine->getManager();
+            $entityManager = $this->getDoctrine()->getManager();
             $comment = new Comment();
             $comment->setArticleId($article_id);
             $comment->setUserId($user_id);
