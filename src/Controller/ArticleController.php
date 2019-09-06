@@ -67,33 +67,44 @@ class ArticleController extends AbstractController
                 $user_id = $session->get('user_id');
                 $user_name = $session->get('user_name');
 
-                // comment form (for creating new comment)
-                $comment_form = $this->createForm(CommentType::class);
-                $comment_form->handleRequest($request);
+                if ($user_id > 0) {
+                    // comment form (for creating new comment)
+                    $comment_form = $this->createForm(CommentType::class);
+                    $comment_form->handleRequest($request);
 
-                if ($comment_form->isSubmitted() && $comment_form->isValid()) {
-                    $form_data = $comment_form->getData();
-                    $MainController = new MainController();
-                    $saved = $MainController->processSaveComment($doctrine, $user_id, $form_data);
-                    if ($saved === true) {
-                        $message = 'Komentář byl úspěšně vytvořen.';
-                    } else {
-                        $message = $saved;
+                    if ($comment_form->isSubmitted() && $comment_form->isValid()) {
+                        $form_data = $comment_form->getData();
+                        $MainController = new MainController();
+                        $saved = $MainController->processSaveComment($doctrine, $user_id, $form_data);
+                        if ($saved === true) {
+                            $message = 'Komentář byl úspěšně vytvořen.';
+                        } else {
+                            $message = $saved;
+                        }
+                        $url = $this->generateUrl('article_detail');
+                        return $this->redirect($url . '/' . $article_id . '?message=' . $message);
                     }
-                    $url = $this->generateUrl('article_detail');
-                    return $this->redirect($url.'/'.$article_id.'?message='.$message);
-                }
 
-                return $this->render('article/article_detail.html.twig', [
-                    'article_id' => $article_id,
-                    'article_header' => $article_header,
-                    'article_content' => $article_content,
-                    'comments' => $comments,
-                    'user_id' => $user_id,
-                    'user_name' => $user_name,
-                    'button_back' => true,
-                    'comment_form' => $comment_form->createView()
-                ]);
+                    return $this->render('article/article_detail.html.twig', [
+                        'article_id' => $article_id,
+                        'article_header' => $article_header,
+                        'article_content' => $article_content,
+                        'comments' => $comments,
+                        'user_id' => $user_id,
+                        'user_name' => $user_name,
+                        'button_back' => true,
+                        'comment_form' => $comment_form->createView()
+                    ]);
+
+                } else {
+                    return $this->render('article/article_detail.html.twig', [
+                        'article_id' => $article_id,
+                        'article_header' => $article_header,
+                        'article_content' => $article_content,
+                        'comments' => $comments,
+                        'button_back' => true
+                    ]);
+                }
             } else {
                 $message = "Článek nebyl nalezen v databázi.";
             }

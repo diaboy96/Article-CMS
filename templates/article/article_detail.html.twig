@@ -17,12 +17,17 @@
 
 
                     <div class="comment" style="bottom: 0;float: bottom">
-                        {{ form_start(comment_form) }}
-                            {{ form_row(comment_form.article_id, {'attr': {'value': article_id} }) }}
-                            {{ form_row(comment_form.comment, {'label': false}) }}
-                            <input type="submit" value="Odeslat">
-                        {{ form_end(comment_form) }}
-                        {#todo change placeholder if user is not logged (by user id)#}
+                        {% if comment_form is defined %}
+                            {{ form_start(comment_form) }}
+                                {{ form_row(comment_form.article_id, {'attr': {'value': article_id} }) }}
+                                {{ form_row(comment_form.comment, {'label': false}) }}
+                                <input type="submit" value="Odeslat">
+                            {{ form_end(comment_form) }}
+                        {% else %}
+                            <span style="color: red">
+                                    (Pokud chcete komentovat příspěvky, musíte se přihlásit.)
+                            </span>
+                        {% endif %}
                     </div>
                     {% if comments is defined and comments is not empty %}
                         <div class="comments">
