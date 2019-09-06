@@ -8,6 +8,7 @@ use App\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,7 +19,7 @@ class ArticleController extends AbstractController
      */
     public function createArticle()
     {
-        //todo
+        //todo admin
     }
 
     /**
@@ -26,19 +27,23 @@ class ArticleController extends AbstractController
      */
     public function editArticle($article_id)
     {
-        //todo
+        //todo admin
     }
 
     /**
      * @Route("/removeArticle/{article_id}", name="article_remove", defaults={"article_id" = "not_set"})
+     * @param $article_id
      */
     public function removeArticle($article_id)
     {
-        //todo
+        //todo admin
     }
-    
+
     /**
      * @Route("/articleDetail/{article_id}", name="article_detail", defaults={"article_id" = "not_set"})
+     * @param $article_id
+     * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function articleDetail($article_id, Request $request)
     {

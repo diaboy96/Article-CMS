@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Entity\Login;
 use App\Form\CommentType;
 use App\Form\LoginType;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,6 +25,7 @@ class MainController extends AbstractController
      */
     public function index(Request $request)
     {
+        $doctrine = $this->getDoctrine();
         $session = new Session();
 
         $login_form = $this->createForm(LoginType::class);
@@ -34,7 +36,7 @@ class MainController extends AbstractController
             $name = htmlspecialchars(strip_tags($form_data->getName()));
             $pass = hash('sha512', htmlspecialchars(strip_tags($form_data->getPass())));
 
-            $login = $this->processLogin($name, $pass);
+            $login = $this->processLogin($doctrine, $name, $pass);
             if ($login['logged'] === true) {
                 $session->set('user_id', $login['user_id']);
                 $session->set('user_name', $login['user_name']);
@@ -46,10 +48,8 @@ class MainController extends AbstractController
 
         $user_id = $session->get('user_id');
         $user_name = $session->get('user_name');
-        $articles_and_comments = $this->getAllArticlesWithComments();
+        $articles_and_comments = $this->getAllArticlesWithComments($doctrine);
         if (isset($user_id) && !empty($user_id) && isset($user_name) && !empty($user_name)){ // user is LOGGED IN
-
-
 
             // generate CommentType forms
             $comment_forms = [];
@@ -64,7 +64,7 @@ class MainController extends AbstractController
 
             if ($comment_form->isSubmitted() && $comment_form->isValid()) {
                 $form_data = $comment_form->getData();
-                $saved = $this->processSaveComment($user_id, $form_data);
+                $saved = $this->processSaveComment($doctrine, $user_id, $form_data);
 
                 if ($saved === true) {
                     //todo message frontend SAVED SUCCESSFUL
@@ -96,13 +96,14 @@ class MainController extends AbstractController
     }
 
     /**
+     * @param ManagerRegistry $doctrine
      * @param $name
      * @param $pass
      * @return array
      */
-    private function processLogin($name, $pass)
+    private function processLogin(ManagerRegistry $doctrine, $name, $pass)
     {
-        $user = $this->getDoctrine()->getRepository(Login::class)->findOneBy(['name' => $name, 'pass' => $pass]);
+        $user = $doctrine->getRepository(Login::class)->findOneBy(['name' => $name, 'pass' => $pass]);
         $message = '';
 
         if ($user) {
@@ -136,12 +137,11 @@ class MainController extends AbstractController
     }
 
     /**
+     * @param ManagerRegistry $doctrine
      * @return array
      */
-    private function getAllArticlesWithComments()
+    private function getAllArticlesWithComments(ManagerRegistry $doctrine)
     {
-        $doctrine = $this->getDoctrine();
-
         //get article repository
         $articles = $doctrine
             ->getRepository(Article::class)
@@ -162,18 +162,19 @@ class MainController extends AbstractController
     }
 
     /**
+     * @param ManagerRegistry $doctrine
      * @param $user_id
      * @param $form_data
      * @return bool|string
      */
-    public function processSaveComment($user_id, $form_data)
+    public function processSaveComment(ManagerRegistry $doctrine, $user_id, $form_data)
     {
         $comment_value = htmlspecialchars(strip_tags($form_data->getComment()));
         $article_id = intval($form_data->getArticleId());
 
         //save comment to db
         if (!empty($comment_value) && !empty($article_id)) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $doctrine->getManager();
             $comment = new Comment();
             $comment->setArticleId($article_id);
             $comment->setUserId($user_id);
