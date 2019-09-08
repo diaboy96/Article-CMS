@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="cs">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Article CMS{% endblock %}</title>
@@ -35,8 +35,8 @@
             {{ include('remodals/message_remodal.html.twig') }}
         {% endblock %}
 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         {% block javascripts %}
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
             <script src="{{ asset('js/remodal_user.js') }}"></script>
         {% endblock %}
     </body>

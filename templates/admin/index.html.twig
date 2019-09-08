@@ -3,26 +3,38 @@
 {% block title %}{{ parent() }} | admin{% endblock %}
 
 {% block stylesheets %}
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/main_admin.css') }}">
+    {% if admin_id is defined and admin_id > 0 %} {# Better remodal CSS #}
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_default_user.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_user.css') }}">
+    {% else %} {# Remodal CSS only for login form (to admin section) #}
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_default_admin.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_admin.css') }}">
+    {% endif %}
 {% endblock %}
 
 {% block navbar %}
-
+    
 {% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    {#{parent()}#}
+{% endblock %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/xampp/htdocs/SYMFONY/article_cms/src/Controller/AdminController.php'|file_link(0) }}">src/Controller/AdminController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/xampp/htdocs/SYMFONY/article_cms/templates/admin/index.html.twig'|file_link(0) }}">templates/admin/index.html.twig</a></code></li>
-    </ul>
-</div>
+{% block javascripts %}
+    {% if admin_id is defined and admin_id > 0 %} {# Remodal can be closed by clicking somewhere on the page #}
+        <script src="{{ asset('js/remodal_user.js') }}"></script>
+    {% else %} {# Remodal cannot be closed - only for login form (to admin section) #}
+        <script src="{{ asset('js/remodal_admin.js') }}"></script>
+    {% endif %}
+    <script>
+        {% if app.request.query.get('scrollto') is defined and app.request.query.get('scrollto') is not empty %}
+            var scroll = '{{ app.request.query.get('scrollto') }}';
+            $(document).ready(function(){
+                $('html, body').animate({
+                    scrollTop: $(scroll).offset().top
+                }, 900);
+            });
+        {% endif %}
+    </script>
 {% endblock %}

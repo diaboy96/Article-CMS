@@ -1,0 +1,96 @@
+/**
+
+CSS MAP:
+    1] MAIN -
+        1) header
+        2) container - main tasks design
+    2] TOP bar
+
+**/
+
+/* -------------------------------- */
+
+/* 1] MAIN */
+/* 1) header */
+.arrow-back {
+    left: 9px;
+    font-size: 30px;
+    color: white;
+    text-decoration: none;
+}
+body {
+    zoom: 130%;
+}
+/* 2) container */
+#orderBy {
+    text-align: center;
+    margin-bottom: 16px;
+}
+/* main tasks design */
+.articleDiv {
+    width: 530px;
+    margin: 0 auto;
+}
+.comment {
+    margin-top: 12px;
+}
+.comment form input{
+    padding: 8px;
+}
+.comment form input[type=text]{
+    width: 78%;
+}
+.comment-value {
+    padding: 2.5px 0;
+}
+.articleDiv .topLine {
+    border-bottom: 2px solid #009aff;
+    padding-left: 6px;
+    height: 40px;
+    font-family: 'Roboto', sans-serif;
+    color: black;
+    font-size: 30px;
+}
+.articleDiv .topLine .deledit {
+    font-size: 16px;
+    float: right;
+}
+.articleDiv .bottomLine {
+    margin-bottom: 25px;
+    display: block;
+    padding: 2px;
+}
+
+/* 2] TOP bar */
+
+#navbar {
+    height: 170px;
+    background-color: #2babff;
+    margin-bottom: 50px;
+}
+#navbar form input[type=text]{
+    padding: 12px 7px;
+    font-size: 22px;
+}
+#navbar ul {
+    text-align: center;
+    line-height: 230px;
+}
+#navbar ul li {
+    display: inline-block;
+    color: white;
+    width: 100px;
+    height: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+#navbar ul li img {
+    width: 100%;
+    height: 100%;
+}
+.zoom-in {
+    transition: transform .2s;
+}
+.zoom-in:hover {
+    transform: scale(1.35);
+}
