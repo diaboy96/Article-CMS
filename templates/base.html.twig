@@ -5,7 +5,11 @@
         <title>{% block title %}Article CMS{% endblock %}</title>
         <link rel="stylesheet" type="text/css" href="{{ asset('css/bulma.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/topBar.css') }}">
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/main_user.css') }}">
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_default_user.css') }}">
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_user.css') }}">
+        {% endblock %}
     </head>
     <body>
         {% block navbar %}
