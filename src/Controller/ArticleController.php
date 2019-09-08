@@ -19,7 +19,8 @@ class ArticleController extends AbstractController
      */
     public function createArticle()
     {
-        //todo admin
+        //todo admin (returnovat admin/article_management.hmtl.twig template)
+        // data z formu odchytavat na backu (tady)
     }
 
     /**
@@ -27,7 +28,9 @@ class ArticleController extends AbstractController
      */
     public function editArticle($article_id)
     {
-        //todo admin
+        //todo admin (returnovat admin/article_management.hmtl.twig template s podminkami pro edit)
+        // injectnout data z articlu do formu
+        // data z formu odchytavat na backendu (tady)
     }
 
     /**
@@ -36,7 +39,7 @@ class ArticleController extends AbstractController
      */
     public function removeArticle($article_id)
     {
-        //todo admin
+        //todo admin (remodal na frontu a tady ciste prace s db)
     }
 
     /**

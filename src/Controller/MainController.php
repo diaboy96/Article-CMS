@@ -25,6 +25,7 @@ class MainController extends AbstractController
      */
     public function index(Request $request)
     {
+        //todo obsah teto metody rozkouskovat na mensi metody (s parametry zdali je pro user nebo admin interface)
         $doctrine = $this->getDoctrine();
         $session = new Session();
         $user_id = $session->get('user_id');

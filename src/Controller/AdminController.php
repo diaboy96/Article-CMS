@@ -14,6 +14,8 @@ class AdminController extends AbstractController
      */
     public function index()
     {
+        // todo: vytvorit univerzalni metodu (metody) v MainController pro vypsani clanku, vytvoreni formu na commenty, prihlaseni, ...
+        // todo: zavolat si tyto metody odsud a predat jim parametry
 
         return $this->render('admin/index.html.twig', [
             'admin_id' => 0
