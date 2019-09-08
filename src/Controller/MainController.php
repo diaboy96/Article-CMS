@@ -27,37 +27,9 @@ class MainController extends AbstractController
     {
         $doctrine = $this->getDoctrine();
         $session = new Session();
-
-        $login_form = $this->createForm(LoginType::class);
-
-        $login_form->handleRequest($request);
-        if ($login_form->isSubmitted() && $login_form->isValid()) {
-            $form_data = $login_form->getData();
-            $name = htmlspecialchars(strip_tags($form_data->getName()));
-            $pass = hash('sha512', htmlspecialchars(strip_tags($form_data->getPass())));
-
-            $login = $this->processLogin($doctrine, $name, $pass);
-            if ($login['logged'] === true) {
-                $session->set('user_id', $login['user_id']);
-                $session->set('user_name', $login['user_name']);
-                $message_type = 'success';
-                $message = 'Přihlášení proběhlo úspěšně';
-            } elseif ($login['logged'] === false) {
-                $message_type = 'error';
-                $message = $login['message'];
-            }
-
-
-            $url = $this->generateUrl('main', [
-                'message' => $message,
-                'message_type' => $message_type
-            ]);
-
-            return $this->redirect($url.'#message');
-        }
-
         $user_id = $session->get('user_id');
         $user_name = $session->get('user_name');
+
         $articles_and_comments = $this->getAllArticlesWithComments($doctrine);
         if (isset($user_id) && !empty($user_id) && isset($user_name) && !empty($user_name)){ // user is LOGGED IN
 
@@ -72,7 +44,7 @@ class MainController extends AbstractController
             $comment_form = $this->createForm(CommentType::class);
             $comment_form->handleRequest($request);
 
-            if ($comment_form->isSubmitted() && $comment_form->isValid()) {
+            if ($comment_form->isSubmitted() && $comment_form->isValid()) { // handle COMMENT form
                 $form_data = $comment_form->getData();
                 $saved = $this->processSaveComment($doctrine, $user_id, $form_data);
 
@@ -101,6 +73,33 @@ class MainController extends AbstractController
             ]);
 
         } else { // user is NOT LOGGED in
+            $login_form = $this->createForm(LoginType::class);
+
+            $login_form->handleRequest($request);
+            if ($login_form->isSubmitted() && $login_form->isValid()) { // handle LOGIN form
+                $form_data = $login_form->getData();
+                $name = htmlspecialchars(strip_tags($form_data->getName()));
+                $pass = hash('sha512', htmlspecialchars(strip_tags($form_data->getPass())));
+
+                $login = $this->processLogin($doctrine, $name, $pass);
+                if ($login['logged'] === true) {
+                    $session->set('user_id', $login['user_id']);
+                    $session->set('user_name', $login['user_name']);
+                    $message_type = 'success';
+                    $message = 'Přihlášení proběhlo úspěšně';
+                } elseif ($login['logged'] === false) {
+                    $message_type = 'error';
+                    $message = $login['message'];
+                }
+
+
+                $url = $this->generateUrl('main', [
+                    'message' => $message,
+                    'message_type' => $message_type
+                ]);
+
+                return $this->redirect($url.'#message');
+            }
 
             return $this->render('main/index.html.twig', [
                 'articles' => $articles_and_comments['articles'],
