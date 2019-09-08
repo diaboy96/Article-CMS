@@ -1,0 +1,63 @@
+{% extends 'remodals/base_remodal.html.twig' %}
+
+{% block remodal_confirm_button %}{% endblock %}
+
+{% block remodal_title_style %}
+    {% if app.request.query.get('message_type') is defined %}
+        {% if app.request.query.get('message_type') == 'success' %}
+            color: green
+        {% elseif app.request.query.get('message_type') == 'info' %}
+            color: black
+        {% elseif app.request.query.get('message_type') == 'error' %}
+            color: red
+        {% endif %}
+    {% else %}
+        color: black
+    {% endif %}
+{% endblock %}
+
+{% block remodal_cancel_button_style %}
+    {% if app.request.query.get('message_type') is defined %}
+        {% if app.request.query.get('message_type') == 'success' %}
+            background-color: green;
+            padding: 12px 20px;
+        {% elseif app.request.query.get('message_type') == 'info' %}
+            background-color: black;
+            padding: 12px 20px;
+        {% elseif app.request.query.get('message_type') == 'error' %}
+            background-color: red;
+            padding: 12px 20px;
+        {% endif %}
+    {% else %}
+        background-color: black;
+        padding: 12px 20px;
+    {% endif %}
+{% endblock %}
+
+{% block remodal_class %}message{% endblock %}
+
+{% block remodal_id %}message{% endblock %}
+
+{% block remodal_title %}
+    {% if app.request.query.get('message_type') is defined %}
+        {% if app.request.query.get('message_type') == 'success' %}
+            Úspěch
+        {% elseif app.request.query.get('message_type') == 'info' %}
+            Oznámení
+        {% elseif app.request.query.get('message_type') == 'error' %}
+            Chyba
+        {% else %}
+            Zpráva
+        {% endif %}
+    {% else %}
+        Zpráva
+    {% endif %}
+{% endblock %}
+
+{% block remodal_content %}
+    {% if app.request.query.get('message') is defined %}
+        {{ app.request.query.get('message') }}
+    {% endif %}
+{% endblock %}
+
+{% block remodal_cancel_button %}Zavřít oznámení{% endblock %}
