@@ -14,7 +14,43 @@
 {% endblock %}
 
 {% block navbar %}
-    
+    <div id="navbar">
+        <ul>
+            {% if admin_id is defined and admin_id > 0 %} {# Admin is logged in #}
+                {# Create article #}
+                <li>
+                    <a href="{{ path('article_create') }}" title="Vytvořit článek">
+                        <img src="{{ asset('svg/pencil.svg') }}" style="padding-bottom: 5px;padding-top: 3px;width: 95%; height: 78px" class="zoom-in" alt="Menu-icon-pencil">
+                    </a>
+                </li>
+                {# Manage user accounts #}
+                <li>
+                    <a href="{# TODO #}" title="Spravovat uživatelské účty">
+                        <img src="{{ asset('svg/users.svg') }}" class="zoom-in" alt="Menu-icon-users">
+                    </a>
+                </li>
+            {% else %} {# Admin is NOT logged #}
+                {# Create article #}
+                <li>
+                    <a href="#" title="Vytvořit článek">
+                        <img src="{{ asset('svg/pencil.svg') }}" style="padding-bottom: 5px;padding-top: 3px;width: 95%; height: 78px" class="zoom-in" alt="Menu-icon-pencil">
+                    </a>
+                </li>
+                {# Manage user accounts #}
+                <li>
+                    <a href="#" title="Spravovat uživatelské účty">
+                        <img src="{{ asset('svg/users.svg') }}" class="zoom-in" alt="Menu-icon-users">
+                    </a>
+                </li>
+            {% endif %}
+            {# Logout #}
+            <li>
+                <a href="{{ path('admin_logout') }}" title="Odhlásit se">
+                    <img src="{{ asset('svg/logout_admin.svg') }}" class="zoom-in" style="height: 78.5px" alt="Menu-icon-logout">
+                </a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
 
 {% block body %}
