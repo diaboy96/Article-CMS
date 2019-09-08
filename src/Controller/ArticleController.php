@@ -67,7 +67,7 @@ class ArticleController extends AbstractController
                 $user_id = $session->get('user_id');
                 $user_name = $session->get('user_name');
 
-                if ($user_id > 0) {
+                if ($user_id > 0) { // user is logged in
                     // comment form (for creating new comment)
                     $comment_form = $this->createForm(CommentType::class);
                     $comment_form->handleRequest($request);
@@ -78,11 +78,13 @@ class ArticleController extends AbstractController
                         $saved = $MainController->processSaveComment($doctrine, $user_id, $form_data);
                         if ($saved === true) {
                             $message = 'Komentář byl úspěšně vytvořen.';
+                            $message_type = 'success';
                         } else {
                             $message = $saved;
+                            $message_type = 'error';
                         }
                         $url = $this->generateUrl('article_detail');
-                        return $this->redirect($url . '/' . $article_id . '?message=' . $message);
+                        return $this->redirect($url . '/' . $article_id . '?message=' . $message . '&message_type='.$message_type.'#message');
                     }
 
                     return $this->render('article/article_detail.html.twig', [
@@ -96,7 +98,7 @@ class ArticleController extends AbstractController
                         'comment_form' => $comment_form->createView()
                     ]);
 
-                } else {
+                } else { // user is not logged in
                     return $this->render('article/article_detail.html.twig', [
                         'article_id' => $article_id,
                         'article_header' => $article_header,
@@ -112,7 +114,13 @@ class ArticleController extends AbstractController
             $message = "V URL adrese se nenachází id článku";
         }
 
-        return $this->redirectToRoute('main', ['message' => $message]);
+
+        $url = $this->generateUrl('main', [
+            'message' => $message,
+            'message_type' => 'error'
+        ]);
+
+        return $this->redirect($url.'#message');
     }
 
     /**
@@ -136,7 +144,7 @@ class ArticleController extends AbstractController
             $message_type = 'success';
         } else {
             $message = $comment['message'];
-            $message_type = 'failure';
+            $message_type = 'error';
         }
 
         $url = $this->generateUrl('main', [
@@ -144,7 +152,7 @@ class ArticleController extends AbstractController
             'message_type' => $message_type
         ]);
 
-        return $this->redirect($url); // todo use get parameters in URL to display remodal (or message) of performed action
+        return $this->redirect($url.'#message');
     }
 
     /**
@@ -165,7 +173,7 @@ class ArticleController extends AbstractController
             $message_type = 'success';
         } else {
             $message = $comment['message'];
-            $message_type = 'failure';
+            $message_type = 'error';
         }
 
         $url = $this->generateUrl('main', [
@@ -173,7 +181,7 @@ class ArticleController extends AbstractController
             'message_type' => $message_type
         ]);
 
-        return $this->redirect($url); // todo use get parameters in URL to display remodal (or message) of performed action
+        return $this->redirect($url.'#message');
     }
 
     /**

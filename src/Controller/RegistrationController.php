@@ -8,6 +8,7 @@ use phpDocumentor\Reflection\Types\This;
 use App\Repository\LoginRepository;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +18,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/registration", name="registration")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      */
     public function index(Request $request)
     {
@@ -40,7 +41,7 @@ class RegistrationController extends AbstractController
      * @Route("/registration/activation/{email}/{hash}", name="registration_activation", defaults={"email" = "not_set", "hash" = "not_set"})
      * @param $email
      * @param $hash
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function activation($email, $hash)
     {
@@ -97,7 +98,12 @@ class RegistrationController extends AbstractController
             $message_type = "success";
         }
 
-        return $this->redirectToRoute('main', ['message' => $message, 'message_type' => $message_type]); // todo Use messsage on frontend
+        $url = $this->generateUrl('main', [
+            'message' => $message,
+            'message_type' => $message_type
+        ]);
+
+        return $this->redirect($url.'#message');
         /*
          * Error_code = A1 ---> Route="registration_activation" - Zadaný email nebyl nalezen v databázi
          * Error_code = A2 ---> Route="registration_activation" - Email nebyl zadán v URL adrese
@@ -109,7 +115,7 @@ class RegistrationController extends AbstractController
     /**
      * @param Request $request
      * @param $form_data
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     private function register(Request $request,$form_data)
     {
@@ -166,7 +172,13 @@ class RegistrationController extends AbstractController
             $route = 'registration';
         }
 
-        return $this->redirectToRoute($route, ['message' => $message, 'message_type' => $message_type]); //todo USE error message on frontend
+
+        $url = $this->generateUrl($route, [
+            'message' => $message,
+            'message_type' => $message_type
+        ]);
+
+        return $this->redirect($url.'#message');
         /*
          * Error_code = R1 ---> Route="registration", Method="saveToDb" - Nepodařilo se uložit data do databáze
          * Error_code = R2 ---> Route="registration", Method="sendVerificationEmail" - Nepodařilo se odeslat ověřovací email

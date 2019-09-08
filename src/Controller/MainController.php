@@ -40,11 +40,20 @@ class MainController extends AbstractController
             if ($login['logged'] === true) {
                 $session->set('user_id', $login['user_id']);
                 $session->set('user_name', $login['user_name']);
+                $message_type = 'success';
+                $message = 'Přihlášení proběhlo úspěšně';
             } elseif ($login['logged'] === false) {
-                return $this->redirectToRoute('main', ['message' => $login['message']]);
-                // todo message to frontend - Login False
+                $message_type = 'error';
+                $message = $login['message'];
             }
 
+
+            $url = $this->generateUrl('main', [
+                'message' => $message,
+                'message_type' => $message_type
+            ]);
+
+            return $this->redirect($url.'#message');
         }
 
         $user_id = $session->get('user_id');
@@ -68,14 +77,19 @@ class MainController extends AbstractController
                 $saved = $this->processSaveComment($doctrine, $user_id, $form_data);
 
                 if ($saved === true) {
-                    //todo message frontend SAVED SUCCESSFUL
-                    $article_id = $form_data->getArticleId();
-                    $url = $this->generateUrl('main');
-                    return $this->redirect($url.'?message=Komentář byl úspěšně uložen#'.$article_id);
+                    $message_type = 'success';
+                    $message = 'Komentář byl úspěšně uložen';
                 } else {
-                    return $this->redirectToRoute('main', ['message' => $saved]);
-                    //todo message frontend SAVE FAILED
+                    $message_type = 'error';
+                    $message = $saved;
                 }
+
+                $url = $this->generateUrl('main', [
+                    'message' => $message,
+                    'message_type' => $message_type
+                ]);
+
+                return $this->redirect($url.'#message');
             }
 
             return $this->render('main/index.html.twig', [
@@ -136,7 +150,12 @@ class MainController extends AbstractController
         $session = new Session();
         $session->clear();
 
-        return $this->redirectToRoute('main', ['message' => 'Odhlášení proběhlo úspěšně']);
+        $url = $this->generateUrl('main', [
+            'message' => 'Odhlášení proběhlo úspěšně',
+            'message_type' => 'success'
+        ]);
+
+        return $this->redirect($url.'#message');
     }
 
     /**

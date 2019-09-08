@@ -2,6 +2,9 @@
 
 {% block stylesheets %}
 {{ parent() }}
+<link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_default_user.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_user.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/main_user.css') }}">
 <style>
     {% if comment_form is defined %}
         .comments {
@@ -19,6 +22,7 @@
 {% endblock %}
 
 {% block body %}
+    {{ include('remodals/message_remodal.html.twig') }}
     <div id="site">
         <div id="content">
             <div class='article articlearticle'>
