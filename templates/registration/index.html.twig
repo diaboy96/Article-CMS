@@ -5,6 +5,11 @@
     | Registration
 {% endblock %}
 
+{% block stylesheets %} {# TODO check jestli jsou zde potreba #}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bulma.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/topBar.css') }}">
+{% endblock %}
+
 {% block navbar_left %}
     <a href="{{ path('main') }}" title="Zpět">
         <img src="{{ asset('svg/arrow_left.svg') }}" style="margin-bottom: -8px" alt="arrow-left">

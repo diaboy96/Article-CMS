@@ -18,8 +18,20 @@ class AdminController extends AbstractController
         // todo: zavolat si tyto metody odsud a predat jim parametry
 
         return $this->render('admin/index.html.twig', [
-            'admin_id' => 0
+            'admin_id' => 1
         ]);
+    }
+
+    public function checkIfAdminIsLoggedIn()
+    {
+        $session = new Session();
+        $admin_id = $session->get('admin_id');
+
+        if ($admin_id > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

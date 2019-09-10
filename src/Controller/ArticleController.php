@@ -19,8 +19,17 @@ class ArticleController extends AbstractController
      */
     public function createArticle()
     {
-        //todo admin (returnovat admin/article_management.hmtl.twig template)
-        // data z formu odchytavat na backu (tady)
+        $admin_is_logged_in = new AdminController();
+        $admin_is_logged_in->checkIfAdminIsLoggedIn();
+
+        if ($admin_is_logged_in) {
+            //todo admin (returnovat admin/article_management.hmtl.twig template)
+            // data z formu odchytavat na backu (tady)
+
+            return $this->render('admin/article_manage.html.twig');
+        } else {
+            return $this->redirectToRoute('admin');
+        }
     }
 
     /**
@@ -28,9 +37,16 @@ class ArticleController extends AbstractController
      */
     public function editArticle($article_id)
     {
-        //todo admin (returnovat admin/article_management.hmtl.twig template s podminkami pro edit)
-        // injectnout data z articlu do formu
-        // data z formu odchytavat na backendu (tady)
+        $admin_is_logged_in = new AdminController();
+        $admin_is_logged_in->checkIfAdminIsLoggedIn();
+
+        if ($admin_is_logged_in) {
+            //todo admin (returnovat admin/article_management.hmtl.twig template s podminkami pro edit)
+            // injectnout data z articlu do formu
+            // data z formu odchytavat na backendu (tady)
+        } else {
+            return $this->redirectToRoute('admin');
+        }
     }
 
     /**
@@ -39,7 +55,14 @@ class ArticleController extends AbstractController
      */
     public function removeArticle($article_id)
     {
-        //todo admin (remodal na frontu a tady ciste prace s db)
+        $admin_is_logged_in = new AdminController();
+        $admin_is_logged_in->checkIfAdminIsLoggedIn();
+
+        if ($admin_is_logged_in) {
+            //todo admin (remodal na frontu a tady ciste prace s db)
+        } else {
+            return $this->redirectToRoute('admin');
+        }
     }
 
     /**

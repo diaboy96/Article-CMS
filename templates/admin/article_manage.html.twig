@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | admin{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/tinymce.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% if article_header is defined %}
+        <h1 class="headline">Upravit článek</h1>
+    {% else %}
+        <h1 class="headline">Vytvořit článek</h1>
+    {% endif %}
+    <form>
+        {% if article_header is defined %}
+            <input type="text" name="header" value="{{ article_header }}">
+        {% else %}
+            <input type="text" name="header" onclick="clearContents(this)" value="Zde zadejte nadpis článku">
+        {% endif %}
+        <span> - Max 29 znaků</span>
+        <textarea name="content" class="textarea" placeholder="Zde zadejte obsah článku">
+
+        </textarea>
+        <input type="submit" name="Přidat článek" value="Přidat článek">
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('tinymce/js/tinymce/tinymce.min.js') }}"></script>
+    <script>
+        function clearContents(element) {
+            element.value = ''; // clear contents
+            element.onclick = function() { // disable onclick clear
+                return false;
+            }
+        }
+    </script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            height: 585,
+            theme: 'modern',
+            plugins:/* fullpage */ 'placeholder print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern help',
+            toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
+            image_advtab: true,
+            templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+            ],
+            content_css: [
+                '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                '//www.tinymce.com/css/codepen.min.css'
+            ]
+        });
+    </script>
+{% endblock %}

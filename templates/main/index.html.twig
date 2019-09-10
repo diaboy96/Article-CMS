@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bulma.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/topBar.css') }}">
+{% endblock %}
+
 {% block navbar_left %}
 
     {% if button_back is defined %}

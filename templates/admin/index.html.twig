@@ -3,6 +3,8 @@
 {% block title %}{{ parent() }} | admin{% endblock %}
 
 {% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bulma.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/topBar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/main_admin.css') }}">
     {% if admin_id is defined and admin_id > 0 %} {# Better remodal CSS #}
         <link rel="stylesheet" type="text/css" href="{{ asset('css/remodal_default_user.css') }}">
