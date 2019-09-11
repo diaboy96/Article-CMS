@@ -20,7 +20,7 @@ class LoginRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Login[] Returns an array of Login objects
+    //  * @return LoginManager[] Returns an array of LoginManager objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class LoginRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Login
+    public function findOneBySomeField($value): ?LoginManager
     {
         return $this->createQueryBuilder('l')
             ->andWhere('l.exampleField = :val')

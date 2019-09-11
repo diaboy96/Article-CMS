@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Entity\Login;
 use App\Form\CommentType;
 use App\Form\LoginType;
+use App\Model\LoginManager;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -82,12 +83,13 @@ class MainController extends AbstractController
                 $name = htmlspecialchars(strip_tags($form_data->getName()));
                 $pass = hash('sha512', htmlspecialchars(strip_tags($form_data->getPass())));
 
-                $login = $this->processLogin($doctrine, $name, $pass);
+                $loginManager = new LoginManager();
+                $login = $loginManager->processLogin($doctrine, $name, $pass, 'user');
                 if ($login['logged'] === true) {
                     $session->set('user_id', $login['user_id']);
                     $session->set('user_name', $login['user_name']);
-                    $message_type = 'success';
-                    $message = 'Přihlášení proběhlo úspěšně';
+
+                    return $this->redirectToRoute('main');
                 } elseif ($login['logged'] === false) {
                     $message_type = 'error';
                     $message = $login['message'];
@@ -110,35 +112,6 @@ class MainController extends AbstractController
 
         }
 
-    }
-
-    /**
-     * @param ManagerRegistry $doctrine
-     * @param $name
-     * @param $pass
-     * @return array
-     */
-    private function processLogin(ManagerRegistry $doctrine, $name, $pass)
-    {
-        $user = $doctrine->getRepository(Login::class)->findOneBy(['name' => $name, 'pass' => $pass]);
-        $message = '';
-
-        if ($user) {
-            $user_active = $user->getActive();
-
-            if ($user_active == 1) {
-                return ['logged' => true, 'user_id' => $user->getId(), 'user_name' => $user->getName()];
-            } elseif ($user_active == 'pending') {
-                $message = 'Váš účet není aktivní. Aktivujte ho pomocí odkazu v emailu.';
-            } elseif ($user_active == 0) {
-                $message = 'Váš účet je zablokován. Kontaktujte prosím správce webu.';
-            }
-
-        } else {
-            $message = 'Jméno nebo heslo není správné';
-        }
-
-        return ['logged' => false, 'message' => $message];
     }
 
     /**
