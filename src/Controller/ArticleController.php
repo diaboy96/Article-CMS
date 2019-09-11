@@ -31,13 +31,17 @@ class ArticleController extends AbstractController
             $article_form->handleRequest($request);
 
             if ($article_form->isSubmitted() && $article_form->isValid()) {
+                require_once '../vendor/htmlpurifier/library/HTMLPurifier.auto.php';
+                $htmlPurifier = new \HTMLPurifier();
                 $entityManager = $this->getDoctrine()->getManager();
                 $data = $article_form->getData();
 
                 $article_header = htmlspecialchars(strip_tags($data->getHeader()));
                 $article_header = $this->cleanForXSS($article_header);
+                $article_header = $htmlPurifier->purify($article_header);
 
-                $article_content = htmlspecialchars(strip_tags($data->getContent()));
+                $article_content = $this->cleanForXSS($data->getContent());
+                $article_content = $htmlPurifier->purify($article_content);
 
 
                 $article = new Article();
