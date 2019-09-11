@@ -24,10 +24,11 @@
         <span> - Max 29 znaků</span>
         {% if article_content is defined %}
             {{ form_row(article_form.content, {'value': article_content, 'label': false}) }}
+            <input type="submit" name="Přidat článek" value="Upravit článek">
         {% else %}
             {{ form_row(article_form.content, {'attr': {'placeholder': 'Zde zadejte obsah článku'}, 'label': false}) }}
+            <input type="submit" name="Přidat článek" value="Přidat článek">
         {% endif %}
-        <input type="submit" name="Přidat článek" value="Přidat článek">
     {{ form_end(article_form) }}
 {% endblock %}
 

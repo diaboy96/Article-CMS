@@ -32,21 +32,14 @@ class ArticleController extends AbstractController
             $article_form->handleRequest($request);
 
             if ($article_form->isSubmitted() && $article_form->isValid()) {
-                $htmlPurifier = new HTMLPurifier();
+                // get data and filter from xss
                 $entityManager = $this->getDoctrine()->getManager();
                 $data = $article_form->getData();
-
-                $article_header = htmlspecialchars(strip_tags($data->getHeader()));
-                $article_header = $this->cleanForXSS($article_header);
-                $article_header = $htmlPurifier->purify($article_header);
-
-                $article_content = $this->cleanForXSS($data->getContent());
-                $article_content = $htmlPurifier->purify($article_content);
-
+                $data = $this->purifyFormData($data);
 
                 $article = new Article();
-                $article->setHeader($article_header);
-                $article->setContent($article_content);
+                $article->setHeader($data['article_header']);
+                $article->setContent($data['article_content']);
                 $entityManager->persist($article);
                 $entityManager->flush();
 
@@ -55,9 +48,7 @@ class ArticleController extends AbstractController
             }
 
             return $this->render('admin/article_manage.html.twig', [
-                'article_form' => $article_form->createView(),
-                'article_content' => 'Obsah',
-                'article_header' => 'Nadpis'
+                'article_form' => $article_form->createView()
             ]);
         } else {
             return $this->redirectToRoute('admin');
@@ -66,16 +57,58 @@ class ArticleController extends AbstractController
 
     /**
      * @Route("/editArticle/{article_id}", name="article_edit", defaults={"article_id" = "not_set"})
+     * @param $article_id
+     * @param Request $request
+     * @return RedirectResponse|Response
      */
-    public function editArticle($article_id)
+    public function editArticle($article_id, Request $request)
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
         if ($admin_is_logged_in) {
-            //todo admin (returnovat admin/article_management.hmtl.twig template s podminkami pro edit)
-            // injectnout data z articlu do formu
-            // data z formu odchytavat na backendu (tady)
+
+            $doctrine = $this->getDoctrine();
+            $article_id = intval($article_id);
+            $article = $doctrine
+                ->getRepository(Article::class)
+                ->findOneBy([
+                    'id' => $article_id
+                ]);
+
+            if ($article) {
+                $article_header = $article->getHeader();
+                $article_content = $article->getContent();
+
+                // make form
+                $article_form = $this->createForm(ArticleType::class);
+                $article_form->handleRequest($request);
+
+                if ($article_form->isSubmitted() && $article_form->isValid()) {
+                    // get data and filter from xss
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $data = $article_form->getData();
+
+                    $data = $this->purifyFormData($data);
+
+                    $article->setHeader($data['article_header']);
+                    $article->setContent($data['article_content']);
+                    $entityManager->flush();
+
+                    $url = $this->generateUrl('admin', ['message' => 'Článek byl úspěšně upraven', 'type_message' => 'success']);
+                    return $this->redirect($url.'#message');
+                }
+
+                return $this->render('admin/article_manage.html.twig', [
+                    'article_form' => $article_form->createView(),
+                    'article_content' => $article_content,
+                    'article_header' => $article_header
+                ]);
+            } else {
+                $url = $this->generateUrl('admin', ['message' => 'Článek nebyl nalezen v databázi', 'message_type' => 'error']);
+                return $this->redirect($url.'#message');
+            }
+
         } else {
             return $this->redirectToRoute('admin');
         }
@@ -84,6 +117,7 @@ class ArticleController extends AbstractController
     /**
      * @Route("/removeArticle/{article_id}", name="article_remove", defaults={"article_id" = "not_set"})
      * @param $article_id
+     * @return RedirectResponse
      */
     public function removeArticle($article_id)
     {
@@ -91,7 +125,26 @@ class ArticleController extends AbstractController
         $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
         if ($admin_is_logged_in) {
-            //todo admin (remodal na frontu a tady ciste prace s db)
+
+            $doctrine = $this->getDoctrine();
+            $entityManager = $doctrine->getManager();
+            $article_id = intval($article_id);
+            $article = $doctrine
+                ->getRepository(Article::class)
+                ->findOneBy([
+                    'id' => $article_id
+                ]);
+
+            if ($article) {
+                $entityManager->remove($article);
+                $entityManager->flush();
+
+                $url = $this->generateUrl('admin', ['message' => 'Článek byl úspěšně vymazán', 'message_type' => 'success']);
+                return $this->redirect($url."#message");
+            } else {
+                $url = $this->generateUrl('admin', ['message' => 'Článek nebyl nalezen v databázi', 'message_type' => 'error']);
+                return $this->redirect($url.'#message');
+            }
         } else {
             return $this->redirectToRoute('admin');
         }
@@ -190,8 +243,10 @@ class ArticleController extends AbstractController
     public function editComment($comment_id, Request $request)
     {
         $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id);
+        $admin_is_logged_in = new AdminController();
+        $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
-        if ($comment['is_owned_by_user']) {
+        if ($comment['is_owned_by_user'] || $admin_is_logged_in) {
             $entityManager =  $this->getDoctrine()->getManager();
 
             $comment['comment']->setComment($request->query->get('edit_comment_value'));
@@ -205,7 +260,13 @@ class ArticleController extends AbstractController
             $message_type = 'error';
         }
 
-        $url = $this->generateUrl('main', [
+        if ($admin_is_logged_in) {
+            $route = 'admin';
+        } else {
+            $route = 'main';
+        }
+
+        $url = $this->generateUrl($route, [
             'message' => $message,
             'message_type' => $message_type
         ]);
@@ -221,9 +282,11 @@ class ArticleController extends AbstractController
     public function removeComment($comment_id)
     {
         $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id);
+        $admin_is_logged_in = new AdminController();
+        $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
-        if ($comment['is_owned_by_user']) {
-            $entityManager =  $this->getDoctrine()->getManager();
+        if ($comment['is_owned_by_user'] || $admin_is_logged_in) {
+            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($comment['comment']);
             $entityManager->flush();
 
@@ -234,7 +297,13 @@ class ArticleController extends AbstractController
             $message_type = 'error';
         }
 
-        $url = $this->generateUrl('main', [
+        if ($admin_is_logged_in) {
+            $route = 'admin';
+        } else {
+            $route = 'main';
+        }
+
+        $url = $this->generateUrl($route, [
             'message' => $message,
             'message_type' => $message_type
         ]);
@@ -317,5 +386,26 @@ class ArticleController extends AbstractController
 
 // we are done...
         return $data;
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    private function purifyFormData($data)
+    {
+        $htmlPurifier = new HTMLPurifier();
+
+        $article_header = htmlspecialchars(strip_tags($data->getHeader()));
+        $article_header = $this->cleanForXSS($article_header);
+        $article_header = $htmlPurifier->purify($article_header);
+
+        $article_content = $this->cleanForXSS($data->getContent());
+        $article_content = $htmlPurifier->purify($article_content);
+
+        return [
+            'article_header' => $article_header,
+            'article_content' => $article_content
+        ];
     }
 }
