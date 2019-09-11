@@ -24,7 +24,7 @@ class ArticleController extends AbstractController
     public function createArticle(Request $request)
     {
         $admin_is_logged_in = new AdminController();
-        $admin_is_logged_in->checkIfAdminIsLoggedIn();
+        $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
         if ($admin_is_logged_in) {
             // make form
@@ -64,7 +64,7 @@ class ArticleController extends AbstractController
     public function editArticle($article_id, Request $request)
     {
         $admin_is_logged_in = new AdminController();
-        $admin_is_logged_in->checkIfAdminIsLoggedIn();
+        $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
         if ($admin_is_logged_in) {
 
@@ -122,7 +122,7 @@ class ArticleController extends AbstractController
     public function removeArticle($article_id)
     {
         $admin_is_logged_in = new AdminController();
-        $admin_is_logged_in->checkIfAdminIsLoggedIn();
+        $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
         if ($admin_is_logged_in) {
 
@@ -244,7 +244,7 @@ class ArticleController extends AbstractController
     {
         $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id);
         $admin_is_logged_in = new AdminController();
-        $admin_is_logged_in->checkIfAdminIsLoggedIn();
+        $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
         if ($comment['is_owned_by_user'] || $admin_is_logged_in) {
             $entityManager =  $this->getDoctrine()->getManager();
@@ -283,7 +283,7 @@ class ArticleController extends AbstractController
     {
         $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id);
         $admin_is_logged_in = new AdminController();
-        $admin_is_logged_in->checkIfAdminIsLoggedIn();
+        $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
         if ($comment['is_owned_by_user'] || $admin_is_logged_in) {
             $entityManager = $this->getDoctrine()->getManager();

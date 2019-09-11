@@ -22,10 +22,13 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * @return bool
+     */
     public function checkIfAdminIsLoggedIn()
     {
         $session = new Session();
-        $admin_id = $session->get('admin_id');
+        $admin_id = intval($session->get('admin_id'));
 
         if ($admin_id > 0) {
             return true;
