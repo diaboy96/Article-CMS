@@ -12,14 +12,17 @@
 }
 .headline {
     text-align: left;
-    font-family: aileron-regular;
+    font-family: aileron-regular, sans-serif;
     font-weight: normal;
     font-size: 35px;
-    margin: 19px 0 17px 8px;
+    margin: 15px 0 17px 8px;
+}
+form[name=article] > div:first-child {
+    display: inline-block;
 }
 form input[type=text] {
     font-size: 30px;
-    font-family: aileron;
+    font-family: aileron, sans-serif;
     font-weight: bold;
     color: #626262;
     padding: 12px 20px;
@@ -28,13 +31,13 @@ form input[type=text] {
 }
 form input[type=submit] {
     margin-top: 20px;
-    font-family: aileron;
+    font-family: aileron, sans-serif;
     font-size: 25px;
     font-weight: 700;
     padding: 8px 13px;
     color: #2b2b2b;
 }
 form span {
-    font-family: aileron;
+    font-family: aileron, sans-serif;
     font-size: 18px;
 }

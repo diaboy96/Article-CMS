@@ -14,18 +14,21 @@
     {% else %}
         <h1 class="headline">Vytvořit článek</h1>
     {% endif %}
-    <form>
+
+    {{ form_start(article_form) }}
         {% if article_header is defined %}
-            <input type="text" name="header" value="{{ article_header }}">
+            {{ form_row(article_form.header, {'attr': {'value': article_header}, 'label': false}) }}
         {% else %}
-            <input type="text" name="header" onclick="clearContents(this)" value="Zde zadejte nadpis článku">
+            {{ form_row(article_form.header, {'attr': {'value': 'Zde zadejte nadpis článku', 'onclick': 'clearContents(this)'}, 'label': false}) }}
         {% endif %}
         <span> - Max 29 znaků</span>
-        <textarea name="content" class="textarea" placeholder="Zde zadejte obsah článku">
-
-        </textarea>
+        {% if article_content is defined %}
+            {{ form_row(article_form.content, {'value': article_content, 'label': false}) }}
+        {% else %}
+            {{ form_row(article_form.content, {'attr': {'placeholder': 'Zde zadejte obsah článku'}, 'label': false}) }}
+        {% endif %}
         <input type="submit" name="Přidat článek" value="Přidat článek">
-    </form>
+    {{ form_end(article_form) }}
 {% endblock %}
 
 {% block javascripts %}
