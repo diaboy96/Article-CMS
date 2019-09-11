@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Entity\Comment;
 use App\Form\ArticleType;
 use App\Form\CommentType;
+use HTMLPurifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,8 +32,7 @@ class ArticleController extends AbstractController
             $article_form->handleRequest($request);
 
             if ($article_form->isSubmitted() && $article_form->isValid()) {
-                require_once '../vendor/htmlpurifier/library/HTMLPurifier.auto.php';
-                $htmlPurifier = new \HTMLPurifier();
+                $htmlPurifier = new HTMLPurifier();
                 $entityManager = $this->getDoctrine()->getManager();
                 $data = $article_form->getData();
 

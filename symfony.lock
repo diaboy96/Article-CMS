@@ -93,6 +93,9 @@
     "egulias/email-validator": {
         "version": "2.1.11"
     },
+    "ezyang/htmlpurifier": {
+        "version": "v4.11.0"
+    },
     "fig/link-util": {
         "version": "1.0.0"
     },
