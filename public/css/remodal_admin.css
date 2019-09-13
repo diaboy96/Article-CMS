@@ -107,18 +107,20 @@ html.remodal-is-locked {
     /* Disable Anti-FOUC */
     display: inline-block;
 }
-#logindiv form input[type=text], #logindiv form input[type=password] {
+.remodal_login form input[type=text], .remodal_login form input[type=password] {
     padding: 7px 14px;
     text-align: center;
     border-radius: 4px;
-    width: 30%;
     outline: none;
     box-shadow: 0 0 3px;
     border: 1px solid black;
     margin-bottom: 15px;
 }
-#logindiv .modal3Title {
+.remodal_login .modal3Title {
     font-size: 26px;
     font-family: Roboto, sans-serif;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
+}
+.remodal_login > div > .modal3Desc > form > div{
+    display: inline-block;
 }

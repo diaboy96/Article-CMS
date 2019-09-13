@@ -5,7 +5,9 @@
 {% block remodal_title %}Přihlásit se{% endblock %}
 {% block remodal_content %}
     {{ form_start(login_form) }}
-        {{ form_widget(login_form) }}
+        {{ form_row(login_form.name, {'label': false}) }}
+        {{ form_row(login_form.pass, {'label': false}) }}
+        <br>
         <a href="{{ path('main') }}" title="Opustit administrátorské menu" class="remodal-cancel" style="color: white;">Odejít</a>
         <input type='submit' class='remodal-confirm' value='Přihlásit se' style='border-radius: 0px;width: 110px;margin: 2px;min-height: 44px'>
     {{ form_end(login_form) }}

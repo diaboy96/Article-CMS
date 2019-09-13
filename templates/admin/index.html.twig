@@ -53,17 +53,32 @@
             </li>
         </ul>
     </div>
-{% endblock %} {# todo inside #}
+{% endblock %} {# todo (Spravovat uživatelské účty) viz. inside#}
 
 {% block body %}
-    {#{parent()}#}
-    {# todo: clanky + edit + delete + pridavani komentaru + edit komentaru + delete komentaru #}
+    {# Login remodal #}
+        {% if login_form is defined %}
+            {% include 'remodals/login_remodal.html.twig' %}
+        {% endif %}
+    {# /Login remodal /#}
+
+    {{parent()}}
+    {# todo: edit article + delete article + pridavani komentaru + edit komentaru + delete komentaru #}
 {% endblock %}
 
 {% block javascripts %}
     {% if admin_id is defined and admin_id > 0 %} {# Remodal can be closed by clicking somewhere on the page #}
         <script src="{{ asset('js/remodal_user.js') }}"></script>
     {% else %} {# Remodal cannot be closed - only for login form (to admin section) #}
+        <script>
+            if (window.location.hash !== '#message') { // show login form
+                $(location).attr('href', '#login')
+            } else {
+                setTimeout(function(){ // wait 3000ms and show login form
+                    $(location).attr('href', "{{ path('admin') }}#login")
+                }, 3000);
+            }
+        </script>
         <script src="{{ asset('js/remodal_admin.js') }}"></script>
     {% endif %}
     <script>
