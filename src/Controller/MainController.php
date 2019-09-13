@@ -2,14 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Article;
 use App\Entity\Comment;
-use App\Entity\Login;
 use App\Form\CommentType;
 use App\Form\LoginType;
+use App\Model\ArticleManager;
 use App\Model\LoginManager;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,13 +24,13 @@ class MainController extends AbstractController
      */
     public function index(Request $request)
     {
-        //todo obsah teto metody rozkouskovat na mensi metody (s parametry zdali je pro user nebo admin interface)
         $doctrine = $this->getDoctrine();
         $session = new Session();
         $user_id = $session->get('user_id');
         $user_name = $session->get('user_name');
 
-        $articles_and_comments = $this->getAllArticlesWithComments($doctrine);
+        $articleManager = new ArticleManager();
+        $articles_and_comments = $articleManager->getAllArticlesWithComments($doctrine);
         if (isset($user_id) && !empty($user_id) && isset($user_name) && !empty($user_name)){ // user is LOGGED IN
 
             // generate CommentType forms
@@ -123,31 +121,6 @@ class MainController extends AbstractController
         $session->clear();
 
         return $this->redirectToRoute('main');
-    }
-
-    /**
-     * @param ManagerRegistry $doctrine
-     * @return array
-     */
-    private function getAllArticlesWithComments(ManagerRegistry $doctrine)
-    {
-        //get article repository
-        $articles = $doctrine
-            ->getRepository(Article::class)
-            ->createQueryBuilder('a')
-            ->addOrderBy('a.id', 'DESC')
-            ->getQuery()
-            ->getResult(Query::HYDRATE_ARRAY);
-
-        // get comment repository
-        $comments = $doctrine
-            ->getRepository(Comment::class)
-            ->fetchAllCommentsAndJoinUserName();
-
-        return [
-            'articles' => $articles,
-            'comments' => $comments
-        ];
     }
 
     /**
