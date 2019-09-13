@@ -46,6 +46,18 @@ class LoginManager
                 $message = 'Váš účet je zablokován. Kontaktujte prosím správce webu.';
             }
 
+        } elseif($section == 'admin') {
+
+            $login = $login_repository
+                ->findOneBy([
+                    'name' => $name,
+                    'pass' => $pass
+                ]);
+
+            if ($login) {
+                $message = "Pro přístup do sekce pro administrátory nemáte patřičná oprávnění.";
+            }
+
         } else {
             $message = 'Jméno nebo heslo není správné';
         }
