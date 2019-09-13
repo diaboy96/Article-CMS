@@ -93,15 +93,14 @@ class MainController extends AbstractController
                 } elseif ($login['logged'] === false) {
                     $message_type = 'error';
                     $message = $login['message'];
+
+                    $url = $this->generateUrl('main', [
+                        'message' => $message,
+                        'message_type' => $message_type
+                    ]);
+
+                    return $this->redirect($url.'#message');
                 }
-
-
-                $url = $this->generateUrl('main', [
-                    'message' => $message,
-                    'message_type' => $message_type
-                ]);
-
-                return $this->redirect($url.'#message');
             }
 
             return $this->render('main/index.html.twig', [
@@ -123,12 +122,7 @@ class MainController extends AbstractController
         $session = new Session();
         $session->clear();
 
-        $url = $this->generateUrl('main', [
-            'message' => 'Odhlášení proběhlo úspěšně',
-            'message_type' => 'success'
-        ]);
-
-        return $this->redirect($url.'#message');
+        return $this->redirectToRoute('main');
     }
 
     /**
