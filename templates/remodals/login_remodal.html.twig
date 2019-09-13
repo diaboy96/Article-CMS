@@ -1,0 +1,13 @@
+{% extends 'remodals/base_remodal.html.twig' %}
+{% block remodal_class %}login{% endblock %}
+{% block remodal_id %}login{% endblock %}
+{% block remodal_close_button %}{% endblock %}
+{% block remodal_title %}Přihlásit se{% endblock %}
+{% block remodal_content %}
+    {{ form_start(login_form) }}
+        {{ form_widget(login_form) }}
+        <a href="{{ path('main') }}" title="Opustit administrátorské menu" class="remodal-cancel" style="color: white;">Odejít</a>
+        <input type='submit' class='remodal-confirm' value='Přihlásit se' style='border-radius: 0px;width: 110px;margin: 2px;min-height: 44px'>
+    {{ form_end(login_form) }}
+{% endblock %}
+{% block remodal_buttons %}{% endblock %}

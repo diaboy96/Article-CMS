@@ -1,16 +1,20 @@
 <div class="remodal remodal_{% block remodal_class %}{% endblock %}" data-remodal-id="{% block remodal_id %}{% endblock %}" role="dialog">
-    <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+    {% block remodal_close_button %}
+        <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+    {% endblock %}
     <div>
         <h2 class="modal3Title" style="{% block remodal_title_style %}{% endblock %}">{% block remodal_title %}{% endblock %}</h2>
         <div class="modal3Desc">
             {% block remodal_content %}{% endblock %}
         </div>
     </div>
-    <br>
-    <button data-remodal-action="cancel" class="remodal-cancel" style="{% block remodal_cancel_button_style %}{% endblock %}">
-        {% block remodal_cancel_button %}{% endblock %}
-    </button>
-    {% block remodal_confirm_button %}
-        <a href="{% block remodal_confirm_link %}{% endblock %}" class="remodal-confirm" style="color: white; text-decoration: none">{% block remodal_confirm_button_text %}{% endblock %}</a>
+    {% block remodal_buttons %}
+        <br>
+        <button data-remodal-action="cancel" class="remodal-cancel" style="{% block remodal_cancel_button_style %}{% endblock %}">
+            {% block remodal_cancel_button %}{% endblock %}
+        </button>
+        {% block remodal_confirm_button %}
+            <a href="{% block remodal_confirm_link %}{% endblock %}" class="remodal-confirm" style="color: white; text-decoration: none">{% block remodal_confirm_button_text %}{% endblock %}</a>
+        {% endblock %}
     {% endblock %}
 </div>
