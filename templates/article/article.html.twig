@@ -3,17 +3,25 @@
 
         <div class='topLine' id="{{ article['id'] }}">
                 {# ARTICLE HEADER #}
-                <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+                {% if admin_id is defined and admin_id > 0 %}
                         {{ article['header'] }}
-                </a>
+                {% else %}
+                        <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+                                {{ article['header'] }}
+                        </a>
+                {% endif %}
                 {# /ARTICLE HEADER/ #}
         </div>
 
         <div class='bottomLine'>
                 {# ARTICLE CONTENT #}
-                <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+            {% if admin_id is defined and admin_id > 0 %}
+            {{ article['content']|raw }}
+            {% else %}
+            <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
                         {{ article['content']|raw }}
                 </a>
+            {% endif %}
                 {# /ARTICLE CONTENT/ #}
 
                 {# COMMENT FORM #}
