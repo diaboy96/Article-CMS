@@ -43,7 +43,7 @@ class ArticleController extends AbstractController
                 $entityManager->persist($article);
                 $entityManager->flush();
 
-                $url = $this->generateUrl('admin', ['message' => 'Článek byl úspěšně vytvořen', 'type_message' => 'success']);
+                $url = $this->generateUrl('admin', ['message' => 'Článek byl úspěšně vytvořen', 'message_type' => 'success']);
                 return $this->redirect($url.'#message');
             }
 
@@ -95,7 +95,7 @@ class ArticleController extends AbstractController
                     $article->setContent($data['article_content']);
                     $entityManager->flush();
 
-                    $url = $this->generateUrl('admin', ['message' => 'Článek byl úspěšně upraven', 'type_message' => 'success']);
+                    $url = $this->generateUrl('admin', ['message' => 'Článek byl úspěšně upraven', 'message_type' => 'success']);
                     return $this->redirect($url.'#message');
                 }
 
