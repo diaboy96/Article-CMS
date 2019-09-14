@@ -242,11 +242,11 @@ class ArticleController extends AbstractController
      */
     public function editComment($comment_id, Request $request)
     {
-        $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id);
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
+        $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUserOrAdminIsLoggedInAndGetComment($comment_id, $admin_is_logged_in);
 
-        if ($comment['is_owned_by_user'] || $admin_is_logged_in) {
+        if ($comment['is_owned_by_user']) {
             $entityManager =  $this->getDoctrine()->getManager();
 
             $comment['comment']->setComment($request->query->get('edit_comment_value'));
@@ -281,11 +281,11 @@ class ArticleController extends AbstractController
      */
     public function removeComment($comment_id)
     {
-        $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id);
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
+        $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUserOrAdminIsLoggedInAndGetComment($comment_id, $admin_is_logged_in);
 
-        if ($comment['is_owned_by_user'] || $admin_is_logged_in) {
+        if ($comment['is_owned_by_user']) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($comment['comment']);
             $entityManager->flush();
@@ -315,19 +315,27 @@ class ArticleController extends AbstractController
      * @param $comment_id
      * @return array
      */
-    protected function checkIfCommentIsOwnedByCurrentlyLoggedUser($comment_id)
+    protected function checkIfCommentIsOwnedByCurrentlyLoggedUserOrAdminIsLoggedInAndGetComment($comment_id, $admin_is_logged_in)
     {
 
         $session = new Session();
         $user_id = $session->get('user_id');
         $doctrine = $this->getDoctrine();
 
-        $comment = $doctrine
-            ->getRepository(Comment::class)
-            ->findOneBy([
-                'id' => intval($comment_id),
-                'user_id' => $user_id
-            ]);
+        if ($admin_is_logged_in) {
+            $comment = $doctrine
+                ->getRepository(Comment::class)
+                ->findOneBy([
+                    'id' => intval($comment_id)
+                ]);
+        } else {
+            $comment = $doctrine
+                ->getRepository(Comment::class)
+                ->findOneBy([
+                    'id' => intval($comment_id),
+                    'user_id' => $user_id
+                ]);
+        }
 
         if ($comment) { // comment is owned by currently user
             return ['is_owned_by_user' => true, 'comment' => $comment];

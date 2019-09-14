@@ -46,6 +46,10 @@
                                                         <a href="{{ path('main') }}?comment_id={{ comment['id'] }}&comment_value={{ comment['comment'] }}#edit" title="Upravit komentář">EDIT</a>
                                                          |
                                                         <a href='{{ path('main') }}?comment_id={{ comment['id'] }}#delete' title="Vymazat komentář">DELETE</a>
+                                                {% elseif admin_id is defined and admin_id > 0 %}
+                                                    <a href="{{ path('admin') }}?comment_id={{ comment['id'] }}&comment_value={{ comment['comment'] }}#edit" title="Upravit komentář">EDIT</a>
+                                                    |
+                                                    <a href='{{ path('admin') }}?comment_id={{ comment['id'] }}#delete' title="Vymazat komentář">DELETE</a>
                                                 {% endif %}
                                         </div>
                                 {% endif %}
