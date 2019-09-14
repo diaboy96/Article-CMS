@@ -5,6 +5,16 @@
                 {# ARTICLE HEADER #}
                 {% if admin_id is defined and admin_id > 0 %}
                         {{ article['header'] }}
+                   <span class="deledit">
+                          <a href='{{ path('admin') }}?article_id={{ article['id'] }}#delete'>
+                            DELETE
+                           </a>
+                        |
+                           <a href='{{ path('article_edit') }}/{{ article['id'] }}'>
+                        EDIT
+                           </a>
+
+                    </span>
                 {% else %}
                         <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
                                 {{ article['header'] }}
