@@ -19,13 +19,14 @@ class LoginManager
     public function processLogin(ManagerRegistry $doctrine, $name, $pass, $section)
     {
         $login_repository = $doctrine->getRepository(Login::class);
+        $message = '';
         if ($section == 'user') {
             $login = $login_repository
                 ->findOneBy([
                     'name' => $name,
                     'pass' => $pass
                 ]);
-            $message = '';
+
         } elseif ($section == 'admin') {
             $login = $login_repository
                 ->findOneBy([
@@ -56,6 +57,8 @@ class LoginManager
 
             if ($login) {
                 $message = "Pro přístup do sekce pro administrátory nemáte patřičná oprávnění.";
+            } else {
+                $message = 'Jméno nebo heslo není správné';
             }
 
         } else {

@@ -46,7 +46,7 @@ class MainController extends AbstractController
 
             if ($comment_form->isSubmitted() && $comment_form->isValid()) { // handle COMMENT form
                 $form_data = $comment_form->getData();
-                $saved = $this->processSaveComment($doctrine, $user_id, $form_data);
+                $saved = $articleManager->processSaveComment($doctrine, $user_id, $form_data);
 
                 if ($saved === true) {
                     $message_type = 'success';
@@ -121,34 +121,5 @@ class MainController extends AbstractController
         $session->clear();
 
         return $this->redirectToRoute('main');
-    }
-
-    /**
-     * @param ManagerRegistry $doctrine
-     * @param $user_id
-     * @param $form_data
-     * @return bool|string
-     */
-    public function processSaveComment(ManagerRegistry $doctrine, $user_id, $form_data)
-    {
-        $comment_value = htmlspecialchars(strip_tags($form_data->getComment()));
-        $article_id = intval($form_data->getArticleId());
-
-        //save comment to db
-        if (!empty($comment_value) && !empty($article_id)) {
-            $entityManager = $doctrine->getManager();
-            $comment = new Comment();
-            $comment->setArticleId($article_id);
-            $comment->setUserId($user_id);
-            $comment->setComment($comment_value);
-
-            $entityManager->persist($comment);
-            $entityManager->flush();
-        } else {
-            $message = "Zadejte hodnotu komentare";
-
-            return $message;
-        }
-        return true;
     }
 }

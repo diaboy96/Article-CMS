@@ -27,7 +27,8 @@ class AdminController extends AbstractController
         $admin_is_logged_in = $this->checkIfAdminIsLoggedIn();
 
         if ($admin_is_logged_in) {
-            dump('prihlasen');
+            $admin_id = $session->get('admin_id');
+            $admin_name = $session->get('admin_name');
 
             // generate CommentType forms
             $comment_forms = [];
@@ -42,7 +43,7 @@ class AdminController extends AbstractController
 
             if ($comment_form->isSubmitted() && $comment_form->isValid()) { // handle COMMENT form
                 $form_data = $comment_form->getData();
-                $saved = $this->processSaveComment($doctrine, $user_id, $form_data);
+                $saved = $articleManager->processSaveComment($doctrine, $admin_id, $form_data);
 
                 if ($saved === true) {
                     $message_type = 'success';
@@ -52,7 +53,7 @@ class AdminController extends AbstractController
                     $message = $saved;
                 }
 
-                $url = $this->generateUrl('main', [
+                $url = $this->generateUrl('admin', [
                     'message' => $message,
                     'message_type' => $message_type
                 ]);
@@ -60,12 +61,12 @@ class AdminController extends AbstractController
                 return $this->redirect($url.'#message');
             }
 
-            return $this->render('main/index.html.twig', [
+            return $this->render('admin/index.html.twig', [
                 'articles' => $articles_and_comments['articles'],
                 'comments' => $articles_and_comments['comments'],
                 'comment_forms' => $comment_forms,
-                'user_id' => $user_id,
-                'user_name' => $user_name
+                'admin_id' => $admin_id,
+                'admin_name' => $admin_name
             ]);
 
 
