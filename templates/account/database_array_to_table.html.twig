@@ -1,0 +1,38 @@
+<table>
+    <thead>
+        {% for a,item in db[0] %}
+            <td>{{ a }}</td>
+        {% endfor %}
+
+        {# Edit button #}
+        {% if edit_button is defined and edit_button == 'true' %}
+            <td>Edit</td>
+        {% endif %}
+
+        {# Delete button #}
+        {% if delete_button is defined and delete_button == 'true' %}
+            <td>Delete</td>
+        {% endif %}
+    </thead>
+    {% for item in db %}
+        <tr>
+            {% for data in item %}
+                <td>{{ data }}</td>
+            {% endfor %}
+
+            {# Edit button #}
+            {% if edit_button is defined and edit_button == 'true' %}
+                <td>
+                    <a href="{{ path('edit') }}/{{ item['id'] }}">Edit</a>
+                </td>
+            {% endif %}
+
+            {# Delete button #}
+            {% if delete_button is defined and delete_button == 'true' %}
+                <td>
+                    <a href="{{ path('delete') }}/{{ item['id'] }}">Delete</a>
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+</table>
