@@ -7,12 +7,12 @@
 
 {% block table_buttons_body %}
     <td>
-        <a href="{{ path('user_comments') }}?comment_id={{ item['id'] }}#delete">
+        <a href="{{ path('user_comments') }}/{{ item['user_id'] }}?comment_id={{ item['id'] }}#delete">
             Vymazat komentář
         </a>
     </td>
     <td>
-        <a href="{{ path('admin') }}?headlineComment={{ item['id'] }}&scrollto={#todo Article ID#}}">
+        <a href="{{ path('admin') }}?headlineComment={{ item['id'] }}&scrollto={{ item['article_id'] }}">
             Zobrazit podrobnosti
         </a>
     </td>

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Login;
-use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -47,6 +46,8 @@ class AccountController extends AbstractController
 
     /**
      * @Route("admin/userComments/{user_id}", name="user_comments", defaults={"user_id" = "not_set"})
+     * @param $user_id
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function userComments($user_id)
     {
@@ -66,17 +67,21 @@ class AccountController extends AbstractController
                     'id' => $user_id
                 ]);
 
-            $user_name = $user->getName();
-            $session = new Session();
-            $admin_id = intval($session->get('admin_id'));
+            if ($user) {
+                $user_name = $user->getName();
+                $session = new Session();
+                $admin_id = intval($session->get('admin_id'));
 
-            return $this->render('account/index.html.twig', [
-                'header' => 'Komentáře uživatele ' . $user_name,
-                'admin_id' => $admin_id,
-                'back_to_home_icon' => true,
-                'table' => 'user_comments',
-                'db' => $comments
-            ]);
+                return $this->render('account/index.html.twig', [
+                    'header' => 'Komentáře uživatele ' . $user_name,
+                    'admin_id' => $admin_id,
+                    'back_to_home_icon' => true,
+                    'table' => 'user_comments',
+                    'db' => $comments
+                ]);
+            } else {
+                return $this->redirectToRoute('account_overview');
+            }
         } else {
             return $this->redirectToRoute('admin');
         }
