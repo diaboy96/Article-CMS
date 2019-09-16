@@ -26,11 +26,19 @@
                     </a>
                 </li>
                 {# Manage user accounts #}
-                <li>
-                    <a href="{# TODO (Spravovat uživatelské účty) #}" title="Spravovat uživatelské účty">
-                        <img src="{{ asset('svg/users.svg') }}" class="zoom-in" alt="Menu-icon-users">
-                    </a>
-                </li>
+                {% if back_to_home_icon is defined and back_to_home_icon == 'true' %}
+                    <li>
+                        <a href="{{ path('admin') }}" title="Přehled všech článků">
+                            <img src="{{ asset('svg/home.svg') }}" class="zoom-in" alt="Menu-icon-home" style="margin-bottom: 6px">
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ path('account_overview') }}" title="Spravovat uživatelské účty">
+                            <img src="{{ asset('svg/users.svg') }}" class="zoom-in" alt="Menu-icon-users">
+                        </a>
+                    </li>
+                {% endif %}
             {% else %} {# Admin is NOT logged #}
                 {# Create article #}
                 <li>
