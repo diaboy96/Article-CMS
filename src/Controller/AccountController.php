@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\Login;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -47,7 +48,7 @@ class AccountController extends AbstractController
     /**
      * @Route("admin/userComments/{user_id}", name="user_comments", defaults={"user_id" = "not_set"})
      * @param $user_id
-     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function userComments($user_id)
     {

@@ -1,7 +1,7 @@
 {% for key, article in articles %}
 <div class='articleDiv'>
 
-        <div class='topLine' id="{{ article['id'] }}">
+        <div class='topLine'>
                 {# ARTICLE HEADER #}
                 {% if admin_id is defined and admin_id > 0 %}
                         {{ article['header'] }}
@@ -53,12 +53,17 @@
                 {# /COMMENT FORM/ #}
 
                 {# COMMENTS #}
-                <div class="comment">
+                <div class="comment" id="{{ article['id'] }}">
                         {% for key, comment in comments %}
                                 {% if comment['article_id'] == article['id'] %}
                                         <div class="comment-value">
+                                            {% if app.request.get('headlineComment') is defined and comment['id'] == app.request.get('headlineComment') %}
+                                                <span style="background-color: #ff4336;font-weight: bold;color: white;">{{ comment['user_name'] }}:</span>
+                                                <span style="color: red">{{ comment['comment'] }}</span>
+                                            {% else %}
                                                 <span style="color: #0f81cc;font-weight: bold">{{ comment['user_name'] }}: </span>
                                                 <span>{{ comment['comment'] }}</span>
+                                            {% endif %}
 
                                                 {% if user_id is defined and user_id == comment['user_id'] or is_admin is defined and is_admin == true %}
                                                         <a href="{{ path('main') }}?comment_id={{ comment['id'] }}&comment_value={{ comment['comment'] }}#edit" title="Upravit komentář">EDIT</a>
