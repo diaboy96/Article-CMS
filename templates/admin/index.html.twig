@@ -90,12 +90,12 @@
     {% endif %}
     <script>
         {% if app.request.query.get('scrollto') is defined and app.request.query.get('scrollto') is not empty %}
-            var scroll = '{{ app.request.query.get('scrollto') }}';
-            $(document).ready(function(){
-                $('html, body').animate({
-                    scrollTop: $(scroll).offset().top
-                }, 900);
-            });
+        var scroll = '{{ app.request.query.get('scrollto') }}';
+        $(document).ready(function(){
+            $('html, body').animate({
+                scrollTop: $("#" + scroll).offset().top
+            }, 900);
+        });
         {% endif %}
     </script>
 {% endblock %}
