@@ -19,6 +19,18 @@ class LoginRepository extends ServiceEntityRepository
         parent::__construct($registry, Login::class);
     }
 
+    public function fetchAllDataExceptPasswords()
+    {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = '
+SELECT `id`, `name`, `email`, `hash`, `active`, `type`
+FROM `login`';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
     // /**
     //  * @return LoginManager[] Returns an array of LoginManager objects
     //  */

@@ -1,0 +1,19 @@
+{% extends 'account/tables/base_table.html.twig' %}
+
+{% block table_buttons_header %}
+    <th>Vymazat účet</th>
+    <th>Komentáře</th>
+{% endblock %}
+
+{% block table_buttons_body %}
+    <td>
+        <a href="{{ path('account_overview') }}?user_id={{ item['id'] }}#delete">
+            Vymazat účet
+        </a>
+    </td>
+    <td>
+        <a href="{{ path('user_comments') }}/{{ item['id'] }}">
+            Zobrazit komentáře
+        </a>
+    </td>
+{% endblock %}

@@ -1,38 +1,44 @@
-<table>
-    <thead>
-        {% for a,item in db[0] %}
-            <td>{{ a }}</td>
-        {% endfor %}
-
-        {# Edit button #}
-        {% if edit_button is defined and edit_button == 'true' %}
-            <td>Edit</td>
-        {% endif %}
-
-        {# Delete button #}
-        {% if delete_button is defined and delete_button == 'true' %}
-            <td>Delete</td>
-        {% endif %}
-    </thead>
-    {% for item in db %}
-        <tr>
-            {% for data in item %}
-                <td>{{ data }}</td>
+{% block table %}
+    <table>
+        <thead>
+            {% for a,item in db[0] %}
+                <th>{{ a }}</th>
             {% endfor %}
 
-            {# Edit button #}
-            {% if edit_button is defined and edit_button == 'true' %}
-                <td>
-                    <a href="{{ path('edit') }}/{{ item['id'] }}">Edit</a>
-                </td>
-            {% endif %}
+            {% block table_buttons_header %}
+                {# Edit button #}
+                {% if edit_button is defined and edit_button == 'true' %}
+                    <th>Edit</th>
+                {% endif %}
 
-            {# Delete button #}
-            {% if delete_button is defined and delete_button == 'true' %}
-                <td>
-                    <a href="{{ path('delete') }}/{{ item['id'] }}">Delete</a>
-                </td>
-            {% endif %}
-        </tr>
-    {% endfor %}
-</table>
+                {# Delete button #}
+                {% if delete_button is defined and delete_button == 'true' %}
+                    <th>Delete</th>
+                {% endif %}
+            {% endblock table_buttons_header %}
+        </thead>
+        {% for item in db %}
+            <tr>
+                {% for data in item %}
+                    <td>{{ data }}</td>
+                {% endfor %}
+
+                {% block table_buttons_body %}
+                    {# Edit button #}
+                    {% if edit_button is defined and edit_button == 'true' %}
+                        <td>
+                            <a href="{{ path('edit') }}/{{ item['id'] }}">Edit</a>
+                        </td>
+                    {% endif %}
+
+                    {# Delete button #}
+                    {% if delete_button is defined and delete_button == 'true' %}
+                        <td>
+                            <a href="{{ path('delete') }}/{{ item['id'] }}">Delete</a>
+                        </td>
+                    {% endif %}
+                {% endblock table_buttons_body %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

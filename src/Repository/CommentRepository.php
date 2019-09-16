@@ -51,6 +51,20 @@ ORDER BY com.id DESC';
 
         return $stmt->fetchAll();
     }
+
+    public function fetchCommentsByUserId($user_id)
+    {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = '
+SELECT *
+FROM `comment`
+WHERE user_id = '.$user_id;
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */

@@ -1,20 +1,27 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/index.html.twig' %}
 
-{% block title %}Hello AccountController!{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/admin_account_overview.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/remodal_user.js') }}"></script>
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    {{ include('remodals/message_remodal.html.twig') }}
+    {{ include('remodals/delete_remodal.html.twig') }}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h2 class="sectionHeadline">
+        {{ header }}
+    </h2>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/xampp/htdocs/SYMFONY/article_cms/src/Controller/AccountController.php'|file_link(0) }}">src/Controller/AccountController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/xampp/htdocs/SYMFONY/article_cms/templates/account/index.html.twig'|file_link(0) }}">templates/account/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <div id="table">
+        {% if table is defined and table == 'registered_users' %}
+            {{ include('account/tables/registered_users_table.html.twig') }}
+        {% elseif table is defined and table == 'user_comments' %}
+            {{ include('account/tables/user_comments_table.html.twig') }}
+        {% endif %}
+    </div>
 {% endblock %}
