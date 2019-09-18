@@ -46,6 +46,51 @@ class AccountController extends AbstractController
     }
 
     /**
+     * @Route("admin/activateUser/{user_id}", name="activate_user", defaults={"user_id" = "not_set"})
+     * @param $user_id
+     * @return RedirectResponse
+     */
+    public function activateUser($user_id)
+    {
+        $admin_is_logged_in = new AdminController();
+        $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
+        $user_id = intval($user_id);
+        $doctrine = $this->getDoctrine();
+
+        if ($admin_is_logged_in) {
+            $user = $doctrine
+                ->getRepository(Login::class)
+                ->findOneBy([
+                    'id' => $user_id
+                ]);
+
+            if ($user) {
+                $active_state = $user->getActive();
+                if ($active_state == 1) {
+                    // deactivate account
+                    $user->setActive(0);
+                } elseif ($active_state == 0) {
+                    // activate account
+                    $user->setActive(1);
+                }
+                $entityManager = $doctrine->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('account_overview');
+            } else {
+                $url = $this->generateUrl('account_overview', [
+                    'message' => 'Nelze provést aktivaci / deaktivaci. Uživatel nebyl nalezen v databázi.',
+                    'message_type' => 'error'
+                ]);
+                return $this->redirect($url."#message");
+            }
+        } else {
+            return $this->redirectToRoute('admin');
+        }
+    }
+
+    /**
      * @Route("admin/userComments/{user_id}", name="user_comments", defaults={"user_id" = "not_set"})
      * @param $user_id
      * @return RedirectResponse|Response

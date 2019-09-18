@@ -18,6 +18,59 @@ table th {
     color: white;
 }
 
+.slideCheckbox {
+    width: 55px;
+    height: 19px;
+    background: #333;
+    margin: 0 auto;
+    position: relative;
+    float: left;
+    display: inline-block;
+    border-radius: 50px;
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
+}
+.slideCheckbox:after {
+    content: 'OFF';
+    color: #000;
+    top: 0;
+    position: absolute;
+    right: 6px;
+    z-index: 0;
+    font: 9px/19px Arial, sans-serif;
+    font-weight: bold;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.15);
+}
+.slideCheckbox:before {
+    content: 'ON';
+    color: #27ae60;
+    position: absolute;
+    left: 6px;
+    z-index: 0;
+    font: 9px/19px Arial, sans-serif;
+    font-weight: bold;
+}
+.slideCheckbox label {
+    display: block;
+    width: 25px;
+    height: 15px;
+    cursor: pointer;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    z-index: 1;
+    background: #fcfff4;
+    background: linear-gradient(to bottom, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    border-radius: 50px;
+    transition: all 0.4s ease;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+}
+.slideCheckbox input[type=checkbox] {
+    visibility: hidden;
+}
+.slideCheckbox input[type=checkbox]:checked + label {
+    left: 28px;
+}
+
 /* RESOURCE: https://codepen.io/AllThingsSmitty/pen/MyqmdM */
 
 table {
