@@ -27,8 +27,6 @@ class AccountController extends AbstractController
                 ->getRepository(Login::class)
                 ->fetchAllDataExceptPasswords();
 
-            // todo JS posuvnik pro aktivaci uctu
-
             $session = new Session();
             $admin_id = intval($session->get('admin_id'));
 
@@ -113,7 +111,7 @@ class AccountController extends AbstractController
                     'id' => $user_id
                 ]);
 
-            if ($user) {
+            if ($comments) {
                 $user_name = $user->getName();
                 $session = new Session();
                 $admin_id = intval($session->get('admin_id'));
@@ -126,7 +124,11 @@ class AccountController extends AbstractController
                     'db' => $comments
                 ]);
             } else {
-                return $this->redirectToRoute('account_overview');
+                $url = $this->generateUrl('account_overview', [
+                    'message' => 'Tento uživatel nemá žádné komentáře',
+                    'message_type' => 'info'
+                ]);
+                return $this->redirect($url.'#message');
             }
         } else {
             return $this->redirectToRoute('admin');
