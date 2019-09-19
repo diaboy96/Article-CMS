@@ -15,7 +15,7 @@
         <h1 class="headline">Vytvořit článek</h1>
     {% endif %}
 
-    {{ form_start(article_form) }}
+    {{ form_start(article_form, {attr: {novalidate: 'novalidate'}}) }}
         {% if article_header is defined %}
             {{ form_row(article_form.header, {'attr': {'value': article_header}, 'label': false}) }}
         {% else %}
@@ -24,10 +24,10 @@
         <span> - Max 29 znaků</span>
         {% if article_content is defined %}
             {{ form_row(article_form.content, {'value': article_content, 'label': false}) }}
-            <input type="submit" name="Přidat článek" value="Upravit článek">
+            <input type="submit" value="Upravit článek">
         {% else %}
             {{ form_row(article_form.content, {'attr': {'placeholder': 'Zde zadejte obsah článku'}, 'label': false}) }}
-            <input type="submit" name="Přidat článek" value="Přidat článek">
+            <input type="submit" value="Přidat článek">
         {% endif %}
     {{ form_end(article_form) }}
 {% endblock %}
