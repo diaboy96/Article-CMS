@@ -68,7 +68,7 @@ body {
 }
 .articleheadline {
     font-size: 30px;
-    font-family: aileron;
+    font-family: aileron, sans-serif;
     font-weight: bold;
     color: #626262;
     padding: 12px 20px;
@@ -87,7 +87,6 @@ body {
 .comments {
     margin: 40px 0 0 30px;
 }
-
 #block {
     height: 170px;
     background-color: #2babff;

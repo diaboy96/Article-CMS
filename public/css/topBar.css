@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
@@ -22,16 +22,14 @@
     border-radius: 5px;
     margin: 0 5px;
     padding: 4px 7px;
-    border: 0px;
+    border: 0;
 }
 .navbar form input[type=submit] {
     margin: 0;
 }
 
-
 #loggedUser{
     float: right;
-    /*margin: 0.56% 0.8%;*/
     margin: 7px 2px;
 }
 .czen {
@@ -42,7 +40,7 @@
 .czen a {
     color: green;
     text-decoration: none;
-    font-family: SansSerif;
+    font-family: sans-serif;
 }
 .tlacitko{
     font: bold 11px Arial;
