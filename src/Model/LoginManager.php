@@ -66,7 +66,6 @@ class LoginManager
             }
 
             return ['logged' => false, 'message' => $message];
-            
         } else {
             throw new Exception('variable $section must be "user" or "admin"');
         }

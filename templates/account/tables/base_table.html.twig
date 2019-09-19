@@ -1,21 +1,23 @@
 {% block table %}
     <table>
         <thead>
-            {% for a,item in db[0] %}
-                <th>{{ a }}</th>
-            {% endfor %}
+            <tr>
+                {% for a,item in db[0] %}
+                    <th>{{ a }}</th>
+                {% endfor %}
 
-            {% block table_buttons_header %}
-                {# Edit button #}
-                {% if edit_button is defined and edit_button == 'true' %}
-                    <th>Edit</th>
-                {% endif %}
+                {% block table_buttons_header %}
+                    {# Edit button #}
+                    {% if edit_button is defined and edit_button == 'true' %}
+                        <th>Edit</th>
+                    {% endif %}
 
-                {# Delete button #}
-                {% if delete_button is defined and delete_button == 'true' %}
-                    <th>Delete</th>
-                {% endif %}
-            {% endblock table_buttons_header %}
+                    {# Delete button #}
+                    {% if delete_button is defined and delete_button == 'true' %}
+                        <th>Delete</th>
+                    {% endif %}
+                {% endblock table_buttons_header %}
+            </tr>
         </thead>
         {% for item in db %}
             <tr>
