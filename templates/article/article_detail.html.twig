@@ -1,21 +1,21 @@
 {% extends 'main/index.html.twig' %}
 
 {% block stylesheets %}
-{{ parent() }}
-<style>
-    {% if comment_form is defined %}
-        .comments {
-            margin: 93px 0 0 30px;
-        }
-    {% endif %}
+    {{ parent() }}
+    <style>
+        {% if comment_form is defined %}
+            .comments {
+                margin: 93px 0 0 30px;
+            }
+        {% endif %}
 
-    form input[type=submit] {
-        float: left;
-    }
-    #content {
-        margin-top: 1.5%;
-    }
-</style>
+        form input[type=submit] {
+            float: left;
+        }
+        #content {
+            margin-top: 1.5%;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -33,7 +33,6 @@
                     <p class='articlecontent'>
                         {{ article_content | raw}}
                     </p>
-
 
                     <div class="comment" >
                         {% if comment_form is defined %}

@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block navbar_left %}
-
     {% if button_back is defined %}
         <a href="{{ path('main') }}#{{ article_id }}" title="Zpět na hlavní stránku">
             <img src="{{ asset('svg/arrow_left.svg') }}" alt="back_icon" style="margin-bottom: -5.5px">
@@ -16,27 +15,22 @@
         Ještě nemáte účet?
         <a href="{{ path('registration') }}"> Zaregistrujte se</a>
     {% endif %}
-
 {% endblock %}
 
 {% block navbar_right %}
-
     {% if user_name is defined and user_name is not empty %}
         Je přihlášen uživatel: {{ user_name }}  
         <a href='{{ path('logout') }}' title='Odhlásit se' style="display: inherit"> 
             <img src='{{ asset('svg/logout.svg') }}' alt='logout_icon'>
         </a>
     {% else %}
-
         {% if login_form is defined %}
             {{ form_start(login_form) }}
                 {{ form_widget(login_form) }}
                 <input type="submit" value="Přihlásit se">
             {{ form_end(login_form) }}
         {% endif %}
-
     {% endif %}
-
 {% endblock %}
 
 {% block body %}

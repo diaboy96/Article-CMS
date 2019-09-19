@@ -1,84 +1,82 @@
 {% for key, article in articles %}
 <div class='articleDiv'>
-
-        <div class='topLine'>
-                {# ARTICLE HEADER #}
-                {% if admin_id is defined and admin_id > 0 %}
-                        {{ article['header'] }}
-                   <span class="deledit">
-                          <a href='{{ path('admin') }}?article_id={{ article['id'] }}#delete'>
-                            DELETE
-                           </a>
-                        |
-                           <a href='{{ path('article_edit') }}/{{ article['id'] }}'>
-                        EDIT
-                           </a>
-
-                    </span>
-                {% else %}
-                        <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
-                                {{ article['header'] }}
-                        </a>
-                {% endif %}
-                {# /ARTICLE HEADER/ #}
-        </div>
-
-        <div class='bottomLine'>
-                {# ARTICLE CONTENT #}
-            {% if admin_id is defined and admin_id > 0 %}
-            {{ article['content']|raw }}
-            {% else %}
-            <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
-                        {{ article['content']|raw }}
+    <div class='topLine'>
+        {# ARTICLE HEADER #}
+        {% if admin_id is defined and admin_id > 0 %}
+            {{ article['header'] }}
+            <span class="deledit">
+                <a href='{{ path('admin') }}?article_id={{ article['id'] }}#delete'>
+                    DELETE
                 </a>
+                 |
+                <a href='{{ path('article_edit') }}/{{ article['id'] }}'>
+                    EDIT
+                </a>
+            </span>
+        {% else %}
+            <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+                {{ article['header'] }}
+            </a>
+        {% endif %}
+        {# /ARTICLE HEADER/ #}
+    </div>
+
+    <div class='bottomLine'>
+        {# ARTICLE CONTENT #}
+        {% if admin_id is defined and admin_id > 0 %}
+            {{ article['content']|raw }}
+        {% else %}
+            <a href='{{ path("article_detail") }}/{{ article['id'] }}' style='color: black' title='Zobrazit článek na celou obrazovku'>
+                {{ article['content']|raw }}
+            </a>
+        {% endif %}
+        {# /ARTICLE CONTENT/ #}
+
+        {# COMMENT FORM #}
+        <div class="comment" style="bottom: 0;float: bottom">
+            {% if comment_forms is defined %}
+                {{ form_start(comment_forms[article['id']]) }}
+                    {{ form_row(comment_forms[article['id']].user_id, {'id': 'comment_user_id_' ~ article['id']}) }}
+                    {{ form_row(comment_forms[article['id']].article_id, {'attr': {'value': article['id']}, 'id': 'comment_article_id_' ~ article['id']}) }}
+                    {{ form_row(comment_forms[article['id']]._token, {'id': 'comment_token_' ~ article['id']}) }}
+                    {{ form_row(comment_forms[article['id']].comment, {'id': 'comment_comment_' ~ article['id'], 'label': false, 'attr': {'placeholder': 'napište komentář'}}) }}
+                    <input type="submit" value="Odeslat">
+                {{ form_end(comment_forms[article['id']]) }}
+            {% else %}
+                <span style="color: red">
+                    (Pokud chcete komentovat příspěvky, musíte se přihlásit.)
+                </span>
             {% endif %}
-                {# /ARTICLE CONTENT/ #}
-
-                {# COMMENT FORM #}
-                <div class="comment" style="bottom: 0;float: bottom">
-                        {% if comment_forms is defined %}
-                                {{ form_start(comment_forms[article['id']]) }}
-                                        {{ form_row(comment_forms[article['id']].user_id, {'id': 'comment_user_id_' ~ article['id']}) }}
-                                        {{ form_row(comment_forms[article['id']].article_id, {'attr': {'value': article['id']}, 'id': 'comment_article_id_' ~ article['id']}) }}
-                                        {{ form_row(comment_forms[article['id']]._token, {'id': 'comment_token_' ~ article['id']}) }}
-                                        {{ form_row(comment_forms[article['id']].comment, {'id': 'comment_comment_' ~ article['id'], 'label': false, 'attr': {'placeholder': 'napište komentář'}}) }}
-                                        <input type="submit" value="Odeslat">
-                                {{ form_end(comment_forms[article['id']]) }}
-                        {% else %}
-                                <span style="color: red">
-                                    (Pokud chcete komentovat příspěvky, musíte se přihlásit.)
-                                </span>
-                        {% endif %}
-                </div>
-                {# /COMMENT FORM/ #}
-
-                {# COMMENTS #}
-                <div class="comment" id="{{ article['id'] }}">
-                        {% for key, comment in comments %}
-                                {% if comment['article_id'] == article['id'] %}
-                                        <div class="comment-value">
-                                            {% if app.request.get('headlineComment') is defined and comment['id'] == app.request.get('headlineComment') %}
-                                                <span style="background-color: #ff4336;font-weight: bold;color: white;">{{ comment['user_name'] }}:</span>
-                                                <span style="color: red">{{ comment['comment'] }}</span>
-                                            {% else %}
-                                                <span style="color: #0f81cc;font-weight: bold">{{ comment['user_name'] }}: </span>
-                                                <span>{{ comment['comment'] }}</span>
-                                            {% endif %}
-
-                                                {% if user_id is defined and user_id == comment['user_id'] or is_admin is defined and is_admin == true %}
-                                                        <a href="{{ path('main') }}?comment_id={{ comment['id'] }}&comment_value={{ comment['comment'] }}#edit" title="Upravit komentář">EDIT</a>
-                                                         |
-                                                        <a href='{{ path('main') }}?comment_id={{ comment['id'] }}#delete' title="Vymazat komentář">DELETE</a>
-                                                {% elseif admin_id is defined and admin_id > 0 %}
-                                                    <a href="{{ path('admin') }}?comment_id={{ comment['id'] }}&comment_value={{ comment['comment'] }}#edit" title="Upravit komentář">EDIT</a>
-                                                    |
-                                                    <a href='{{ path('admin') }}?comment_id={{ comment['id'] }}#delete' title="Vymazat komentář">DELETE</a>
-                                                {% endif %}
-                                        </div>
-                                {% endif %}
-                        {% endfor %}
-                </div>
-                {# /COMMENTS/ #}
         </div>
+        {# /COMMENT FORM/ #}
+
+        {# COMMENTS #}
+        <div class="comment" id="{{ article['id'] }}">
+            {% for key, comment in comments %}
+                {% if comment['article_id'] == article['id'] %}
+                    <div class="comment-value">
+                        {% if app.request.get('headlineComment') is defined and comment['id'] == app.request.get('headlineComment') %}
+                            <span style="background-color: #ff4336;font-weight: bold;color: white;">{{ comment['user_name'] }}:</span>
+                            <span style="color: red">{{ comment['comment'] }}</span>
+                        {% else %}
+                            <span style="color: #0f81cc;font-weight: bold">{{ comment['user_name'] }}: </span>
+                            <span>{{ comment['comment'] }}</span>
+                        {% endif %}
+
+                        {% if user_id is defined and user_id == comment['user_id'] or is_admin is defined and is_admin == true %}
+                            <a href="{{ path('main') }}?comment_id={{ comment['id'] }}&comment_value={{ comment['comment'] }}#edit" title="Upravit komentář">EDIT</a>
+                             |
+                            <a href='{{ path('main') }}?comment_id={{ comment['id'] }}#delete' title="Vymazat komentář">DELETE</a>
+                        {% elseif admin_id is defined and admin_id > 0 %}
+                            <a href="{{ path('admin') }}?comment_id={{ comment['id'] }}&comment_value={{ comment['comment'] }}#edit" title="Upravit komentář">EDIT</a>
+                             |
+                            <a href='{{ path('admin') }}?comment_id={{ comment['id'] }}#delete' title="Vymazat komentář">DELETE</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {# /COMMENTS/ #}
+    </div>
 </div>
 {% endfor %}

@@ -21,7 +21,7 @@
 {% block body %}
     {{ include('remodals/message_remodal.html.twig') }}
     {{ form_start(registration_form) }}
-    {{ form_widget(registration_form) }}
+        {{ form_widget(registration_form) }}
         <input type="submit" value="Registrovat se">
     {{ form_end(registration_form) }}
 {% endblock %}
