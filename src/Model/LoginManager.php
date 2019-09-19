@@ -1,11 +1,9 @@
 <?php
 
-
 namespace App\Model;
-
-
 use App\Entity\Login;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Exception;
 
 class LoginManager
 {
@@ -15,6 +13,7 @@ class LoginManager
      * @param $pass
      * @param $section
      * @return array
+     * @throws Exception
      */
     public function processLogin(ManagerRegistry $doctrine, $name, $pass, $section)
     {
@@ -36,36 +35,39 @@ class LoginManager
                 ]);
         }
 
-        if ($login) {
-            $login_active = $login->getActive();
-
-            if ($login_active == 1) { // logged in
-                return ['logged' => true, $section.'_id' => $login->getId(), $section.'_name' => $login->getName()];
-            } elseif ($login_active == 'pending') {
-                $message = 'Váš účet není aktivní. Aktivujte ho pomocí odkazu v emailu.';
-            } elseif ($login_active == 0) {
-                $message = 'Váš účet je zablokován. Kontaktujte prosím správce webu.';
-            }
-
-        } elseif($section == 'admin') {
-
-            $login = $login_repository
-                ->findOneBy([
-                    'name' => $name,
-                    'pass' => $pass
-                ]);
-
+        if (isset($login)) {
             if ($login) {
-                $message = "Pro přístup do sekce pro administrátory nemáte patřičná oprávnění.";
+                $login_active = $login->getActive();
+
+                if ($login_active == 1) { // logged in
+                    return ['logged' => true, $section . '_id' => $login->getId(), $section . '_name' => $login->getName()];
+                } elseif ($login_active == 'pending') {
+                    $message = 'Váš účet není aktivní. Aktivujte ho pomocí odkazu v emailu.';
+                } elseif ($login_active == 0) {
+                    $message = 'Váš účet je zablokován. Kontaktujte prosím správce webu.';
+                }
+
+            } elseif ($section == 'admin') {
+
+                $login = $login_repository
+                    ->findOneBy([
+                        'name' => $name,
+                        'pass' => $pass
+                    ]);
+
+                if ($login) {
+                    $message = "Pro přístup do sekce pro administrátory nemáte patřičná oprávnění.";
+                } else {
+                    $message = 'Jméno nebo heslo není správné';
+                }
+
             } else {
                 $message = 'Jméno nebo heslo není správné';
             }
 
+            return ['logged' => false, 'message' => $message];
         } else {
-            $message = 'Jméno nebo heslo není správné';
+            throw new Exception('variable $section must be "user" or "admin"');
         }
-
-        return ['logged' => false, 'message' => $message];
-
     }
 }
