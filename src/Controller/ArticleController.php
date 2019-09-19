@@ -68,7 +68,7 @@ class ArticleController extends AbstractController
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
         if ($admin_is_logged_in) {
-
+            // get article (from db)
             $doctrine = $this->getDoctrine();
             $article_id = intval($article_id);
             $article = $doctrine
@@ -87,9 +87,8 @@ class ArticleController extends AbstractController
 
                 if ($article_form->isSubmitted() && $article_form->isValid()) {
                     // get data and filter from xss
-                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager = $doctrine->getManager();
                     $data = $article_form->getData();
-
                     $data = $this->purifyFormData($data);
 
                     $article->setHeader($data['article_header']);
