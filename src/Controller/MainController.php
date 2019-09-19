@@ -2,12 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Form\LoginType;
 use App\Model\ArticleManager;
 use App\Model\LoginManager;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +42,7 @@ class MainController extends AbstractController
             $comment_form = $this->createForm(CommentType::class);
             $comment_form->handleRequest($request);
 
-            if ($comment_form->isSubmitted() && $comment_form->isValid()) { // handle COMMENT form
+            if ($comment_form->isSubmitted() && $comment_form->isValid()) { // handle comment form
                 $form_data = $comment_form->getData();
                 $saved = $articleManager->processSaveComment($doctrine, $user_id, $form_data);
 

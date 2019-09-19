@@ -21,7 +21,7 @@ class RegisterType extends AbstractType
             ->add('email', EmailType::class, ['attr' => ['placeholder' => 'vas@email.cz']])
         ;
     }
-    /* Zakomentoval jsem protoze v entite LoginManager neexistuje pass_again --> hazelo mi to exception pri vytahnuti dat z formu
+    /* Zakomentoval jsem, protoze v entite LoginManager neexistuje pass_again --> hazelo mi to exception pri vytahnuti dat z formu
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

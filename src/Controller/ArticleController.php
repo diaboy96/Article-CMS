@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Entity\Comment;
 use App\Form\ArticleType;
 use App\Form\CommentType;
+use App\Model\ArticleManager;
 use HTMLPurifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -125,7 +126,6 @@ class ArticleController extends AbstractController
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
         if ($admin_is_logged_in) {
-
             $doctrine = $this->getDoctrine();
             $entityManager = $doctrine->getManager();
             $article_id = intval($article_id);
@@ -185,8 +185,8 @@ class ArticleController extends AbstractController
 
                     if ($comment_form->isSubmitted() && $comment_form->isValid()) {
                         $form_data = $comment_form->getData();
-                        $MainController = new MainController();
-                        $saved = $MainController->processSaveComment($doctrine, $user_id, $form_data);
+                        $ArticleManager = new ArticleManager();
+                        $saved = $ArticleManager->processSaveComment($doctrine, $user_id, $form_data);
                         if ($saved === true) {
                             $message = 'Komentář byl úspěšně vytvořen.';
                             $message_type = 'success';
@@ -313,6 +313,7 @@ class ArticleController extends AbstractController
 
     /**
      * @param $comment_id
+     * @param $admin_is_logged_in
      * @return array
      */
     protected function checkIfCommentIsOwnedByCurrentlyLoggedUserOrAdminIsLoggedInAndGetComment($comment_id, $admin_is_logged_in)

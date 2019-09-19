@@ -9,6 +9,7 @@ use App\Model\LoginManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -16,6 +17,8 @@ class AdminController extends AbstractController
 {
     /**
      * @Route("/admin", name="admin")
+     * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function index(Request $request)
     {
@@ -69,11 +72,8 @@ class AdminController extends AbstractController
                 'admin_name' => $admin_name
             ]);
 
-
         } else {
-
             $login_form = $this->createForm(LoginType::class);
-
             $login_form->handleRequest($request);
             if ($login_form->isSubmitted() && $login_form->isValid()) { // handle LOGIN form
                 $form_data = $login_form->getData();

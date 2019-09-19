@@ -4,9 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Login;
 use App\Form\RegisterType;
-use phpDocumentor\Reflection\Types\This;
 use App\Repository\LoginRepository;
-use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,10 +24,9 @@ class RegistrationController extends AbstractController
         $registration_form->handleRequest($request);
 
         if ($registration_form->isSubmitted() && $registration_form->isValid()) {
-
             $form_data = $registration_form->getData();
-            return $this->register($request, $form_data);
 
+            return $this->register($request, $form_data);
         }
 
         return $this->render('registration/index.html.twig', [
@@ -131,19 +128,15 @@ class RegistrationController extends AbstractController
         if ($pass == $pass_again) {
 
             if (strlen($form_data['pass']) > 7 && preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $form_data['pass'])) {
-
                 $login_repository = $this->getDoctrine()->getRepository(Login::class);
-
                 $name_check = $this->checkIfIsInDb($login_repository, 'name', $name);
                 $email_check = $this->checkIfIsInDb($login_repository, 'email', $email);
 
                 if (!$name_check && !$email_check) { // entered name and email are not in database yet
-
                     $sent = $this->sendVerificationMail($request, $email, $hash); // send verification email with hash
 
                     if ($sent) {
                         $saved = $this->saveToDb($name, $pass, $email, $hash); // save data to db
-
                         if ($saved) {
                             $message = 'Registrace proběhla úspěšně, prosím proveďte aktivaci v emailu';
                             $message_type = 'success';

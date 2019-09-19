@@ -1,9 +1,6 @@
 <?php
 
-
 namespace App\Model;
-
-
 use App\Entity\Article;
 use App\Entity\Comment;
 use Doctrine\Common\Persistence\ManagerRegistry;
