@@ -5,12 +5,12 @@
 
 {% block remodal_content %}
     Opravdu si přejete vymazat tento
-    {% if app.request.get('aticle_id') is defined and app.request.get('aticle_id') > 0 %}
+    {% if app.request.get('article_id') is defined and app.request.get('article_id') > 0 %}
         článek?
-    {% elseif app.request.get('user_id') is defined and app.request.get('user_id') > 0 %}
-        uživatelský účet?
     {% elseif app.request.get('comment_id') is defined and app.request.get('comment_id') > 0 %}
         komentář?
+    {% elseif app.request.get('user_id') is defined and app.request.get('user_id') > 0 %}
+        uživatelský účet?
     {% endif %}
 {% endblock %}
 
@@ -18,11 +18,11 @@
 {% block remodal_confirm_button_text %}Ano{% endblock %}
 
 {% block remodal_confirm_link %}
-    {% if app.request.get('aticle_id') is defined and app.request.get('aticle_id') > 0 %}
+    {% if app.request.get('article_id') is defined and app.request.get('article_id') > 0 %}
         {{ path('article_remove') }}/{{ app.request.get('article_id') }}
-    {% elseif app.request.get('user_id') is defined and app.request.get('user_id') > 0 %}
-        {{ path('user_account_remove') }}/{{ app.request.get('user_id') }}
     {% elseif app.request.get('comment_id') is defined and app.request.get('comment_id') > 0 %}
         {{ path('comment_remove') }}/{{ app.request.get('comment_id') }}
+    {% elseif app.request.get('user_id') is defined and app.request.get('user_id') > 0 %}
+        {{ path('user_account_remove') }}/{{ app.request.get('user_id') }}
     {% endif %}
 {% endblock %}
