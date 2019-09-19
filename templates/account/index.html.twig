@@ -7,6 +7,18 @@
 
 {% block javascripts %}
     <script src="{{ asset('js/remodal_user.js') }}"></script>
+    {% if table is defined and table == 'registered_users' %}
+        <script>
+            function activateUserAccount (user_id, url_to_method) {
+                $.ajax({
+                    url: url_to_method + user_id,
+                    context: document.body
+                }).done(function() {
+                    console.log('User account has been successfully activated / deactivated');
+                });
+            }
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block body %}

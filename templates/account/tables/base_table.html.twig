@@ -26,12 +26,11 @@
                         {% if key == 'active' %}
                             <td>
                                 <div class="slideCheckbox">
-                                    <form method="post" action="{{ path('activate_user') }}/{{ item['id'] }}"> {# TODO: make AJAX request #}
-                                        <input type="hidden" name="usrId" value="{{ item['id'] }}" />
+                                    <form>
                                         {% if data == 1 %}
-                                            <input type="checkbox" name="checkbox" id="check{{ item['id'] }}" checked onchange="this.form.submit()">
+                                            <input type="checkbox" name="checkbox" id="check{{ item['id'] }}" checked onchange="activateUserAccount({{ item['id'] }}, '{{ path('activate_user') }}/')">
                                         {% else %}
-                                            <input type="checkbox" name="checkbox" id="check{{ item['id'] }}" onchange="this.form.submit()">
+                                            <input type="checkbox" name="checkbox" id="check{{ item['id'] }}" onchange="activateUserAccount({{ item['id'] }}, '{{ path('activate_user') }}/')">
                                         {% endif %}
                                         <label for="check{{ item['id'] }}"></label>
                                     </form>
