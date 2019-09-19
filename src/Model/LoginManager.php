@@ -17,25 +17,26 @@ class LoginManager
      */
     public function processLogin(ManagerRegistry $doctrine, $name, $pass, $section)
     {
-        $login_repository = $doctrine->getRepository(Login::class);
-        $message = '';
-        if ($section == 'user') {
-            $login = $login_repository
-                ->findOneBy([
-                    'name' => $name,
-                    'pass' => $pass
-                ]);
+        if ($section == 'user' || $section == 'admin') {
 
-        } elseif ($section == 'admin') {
-            $login = $login_repository
-                ->findOneBy([
-                    'name' => $name,
-                    'pass' => $pass,
-                    'type' => 'admin'
-                ]);
-        }
+            $login_repository = $doctrine->getRepository(Login::class);
+            $message = '';
+            if ($section == 'user') {
+                $login = $login_repository
+                    ->findOneBy([
+                        'name' => $name,
+                        'pass' => $pass
+                    ]);
 
-        if (isset($login)) {
+            } elseif ($section == 'admin') {
+                $login = $login_repository
+                    ->findOneBy([
+                        'name' => $name,
+                        'pass' => $pass,
+                        'type' => 'admin'
+                    ]);
+            }
+
             if ($login) {
                 $login_active = $login->getActive();
 
@@ -48,7 +49,6 @@ class LoginManager
                 }
 
             } elseif ($section == 'admin') {
-
                 $login = $login_repository
                     ->findOneBy([
                         'name' => $name,
@@ -66,6 +66,7 @@ class LoginManager
             }
 
             return ['logged' => false, 'message' => $message];
+            
         } else {
             throw new Exception('variable $section must be "user" or "admin"');
         }
