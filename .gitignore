@@ -21,3 +21,9 @@
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+###< IntelliJ IDEA ###
+.DS_Store
+.idea
+.idea/
+###> IntelliJ IDEA ###
