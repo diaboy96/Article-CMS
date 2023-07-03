@@ -96,9 +96,6 @@
     "ezyang/htmlpurifier": {
         "version": "v4.11.0"
     },
-    "fig/link-util": {
-        "version": "1.0.0"
-    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -110,9 +107,6 @@
     },
     "ocramius/package-versions": {
         "version": "1.5.1"
-    },
-    "ocramius/proxy-manager": {
-        "version": "2.2.3"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
@@ -536,11 +530,5 @@
     },
     "webmozart/assert": {
         "version": "1.4.0"
-    },
-    "zendframework/zend-code": {
-        "version": "3.3.1"
-    },
-    "zendframework/zend-eventmanager": {
-        "version": "3.2.1"
     }
 }
