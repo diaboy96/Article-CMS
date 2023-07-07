@@ -22,7 +22,7 @@ class AdminController extends AbstractController
      */
     public function index(Request $request)
     {
-        $session = new Session();
+        $session = $request->getSession();
         $doctrine = $this->getDoctrine();
         $articleManager = new ArticleManager();
         $articles_and_comments = $articleManager->getAllArticlesWithComments($doctrine);
@@ -111,9 +111,9 @@ class AdminController extends AbstractController
     /**
      * @return bool
      */
-    public function checkIfAdminIsLoggedIn()
+    public function checkIfAdminIsLoggedIn(Request $request)
     {
-        $session = new Session();
+        $session = $request->getSession();
         $admin_id = intval($session->get('admin_id'));
 
         if ($admin_id > 0) {
@@ -127,9 +127,9 @@ class AdminController extends AbstractController
      * @Route("/admin/logout", name="admin_logout")
      * @return RedirectResponse
      */
-    public function logout()
+    public function logout(Request $request)
     {
-        $session = new Session();
+        $session = $request->getSession();
         $session->clear();
 
         return $this->redirectToRoute('admin');

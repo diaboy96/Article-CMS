@@ -173,7 +173,7 @@ class ArticleController extends AbstractController
                     ->getRepository(Comment::class)
                     ->fetchCommentsByArticleIdAndJoinUserName($article_id);
 
-                $session = new Session();
+                $session = $request->getSession();
                 $user_id = $session->get('user_id');
                 $user_name = $session->get('user_name');
 
@@ -315,10 +315,12 @@ class ArticleController extends AbstractController
      * @param $admin_is_logged_in
      * @return array
      */
-    protected function checkIfCommentIsOwnedByCurrentlyLoggedUserOrAdminIsLoggedInAndGetComment($comment_id, $admin_is_logged_in)
-    {
-
-        $session = new Session();
+    protected function checkIfCommentIsOwnedByCurrentlyLoggedUserOrAdminIsLoggedInAndGetComment(
+        Request $request,
+        $comment_id,
+        $admin_is_logged_in
+    ){
+        $session = $request->getSession();
         $user_id = $session->get('user_id');
         $doctrine = $this->getDoctrine();
 

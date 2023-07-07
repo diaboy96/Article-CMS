@@ -23,7 +23,7 @@ class MainController extends AbstractController
     public function index(Request $request)
     {
         $doctrine = $this->getDoctrine();
-        $session = new Session();
+        $session = $request->getSession();
         $user_id = $session->get('user_id');
         $user_name = $session->get('user_name');
 
@@ -113,9 +113,9 @@ class MainController extends AbstractController
      * @Route("/logout", name="logout")
      * @return RedirectResponse
      */
-    public function processLogout()
+    public function processLogout(Request $request)
     {
-        $session = new Session();
+        $session = $request->getSession();
         $session->clear();
 
         return $this->redirectToRoute('main');
