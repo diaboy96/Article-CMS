@@ -3,16 +3,16 @@
 namespace App\Model;
 use App\Entity\Article;
 use App\Entity\Comment;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\Query;
 
 class ArticleManager
 {
     /**
-     * @param ManagerRegistry $doctrine
+     * @param Registry $doctrine
      * @return array
      */
-    public function getAllArticlesWithComments(ManagerRegistry $doctrine)
+    public function getAllArticlesWithComments(Registry $doctrine)
     {
         //get article repository
         $articles = $doctrine
@@ -34,12 +34,12 @@ class ArticleManager
     }
 
     /**
-     * @param ManagerRegistry $doctrine
+     * @param Registry $doctrine
      * @param $user_id
      * @param $form_data
      * @return bool|string
      */
-    public function processSaveComment(ManagerRegistry $doctrine, $user_id, $form_data)
+    public function processSaveComment(Registry $doctrine, $user_id, $form_data)
     {
         $comment_value = htmlspecialchars(strip_tags($form_data->getComment()));
         $article_id = intval($form_data->getArticleId());
