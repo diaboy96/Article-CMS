@@ -6,8 +6,8 @@ use App\Entity\Comment;
 use App\Entity\Login;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -16,7 +16,7 @@ class AccountController extends AbstractController
     /**
      * @Route("/admin/accountOverview", name="account_overview")
      */
-    public function index()
+    public function index(Request $request)
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
@@ -27,7 +27,7 @@ class AccountController extends AbstractController
                 ->getRepository(Login::class)
                 ->fetchAllDataExceptPasswords();
 
-            $session = new Session();
+            $session = $request->getSession();
             $admin_id = intval($session->get('admin_id'));
 
             return $this->render('account/index.html.twig', [
@@ -48,7 +48,7 @@ class AccountController extends AbstractController
      * @param $user_id
      * @return RedirectResponse
      */
-    public function activateUser($user_id)
+    public function activateUser($user_id): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
@@ -93,7 +93,7 @@ class AccountController extends AbstractController
      * @param $user_id
      * @return RedirectResponse|Response
      */
-    public function userComments($user_id)
+    public function userComments(Request $request, $user_id)
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
@@ -113,7 +113,7 @@ class AccountController extends AbstractController
 
             if ($comments) {
                 $user_name = $user->getName();
-                $session = new Session();
+                $session = $request->getSession();
                 $admin_id = intval($session->get('admin_id'));
 
                 return $this->render('account/index.html.twig', [
@@ -140,7 +140,7 @@ class AccountController extends AbstractController
      * @param $user_id
      * @return RedirectResponse
      */
-    public function removeUserAccount($user_id)
+    public function removeUserAccount($user_id): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();

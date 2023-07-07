@@ -12,7 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
@@ -119,7 +118,7 @@ class ArticleController extends AbstractController
      * @param $article_id
      * @return RedirectResponse
      */
-    public function removeArticle($article_id)
+    public function removeArticle($article_id): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
@@ -173,7 +172,7 @@ class ArticleController extends AbstractController
                     ->getRepository(Comment::class)
                     ->fetchCommentsByArticleIdAndJoinUserName($article_id);
 
-                $session = new Session();
+                $session = $request->getSession();
                 $user_id = $session->get('user_id');
                 $user_name = $session->get('user_name');
 
@@ -239,7 +238,7 @@ class ArticleController extends AbstractController
      * @param Request $request
      * @return RedirectResponse
      */
-    public function editComment($comment_id, Request $request)
+    public function editComment($comment_id, Request $request): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
@@ -278,7 +277,7 @@ class ArticleController extends AbstractController
      * @param $comment_id
      * @return RedirectResponse
      */
-    public function removeComment($comment_id)
+    public function removeComment($comment_id): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
@@ -315,10 +314,12 @@ class ArticleController extends AbstractController
      * @param $admin_is_logged_in
      * @return array
      */
-    protected function checkIfCommentIsOwnedByCurrentlyLoggedUserOrAdminIsLoggedInAndGetComment($comment_id, $admin_is_logged_in)
-    {
-
-        $session = new Session();
+    protected function checkIfCommentIsOwnedByCurrentlyLoggedUserOrAdminIsLoggedInAndGetComment(
+        Request $request,
+        $comment_id,
+        $admin_is_logged_in
+    ){
+        $session = $request->getSession();
         $user_id = $session->get('user_id');
         $doctrine = $this->getDoctrine();
 

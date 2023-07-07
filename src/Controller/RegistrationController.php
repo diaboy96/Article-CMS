@@ -40,7 +40,7 @@ class RegistrationController extends AbstractController
      * @param $hash
      * @return RedirectResponse
      */
-    public function activation($email, $hash)
+    public function activation($email, $hash): RedirectResponse
     {
         $error_code = '';
         $message = '';
