@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
@@ -113,7 +112,7 @@ class MainController extends AbstractController
      * @Route("/logout", name="logout")
      * @return RedirectResponse
      */
-    public function processLogout(Request $request)
+    public function processLogout(Request $request): RedirectResponse
     {
         $session = $request->getSession();
         $session->clear();

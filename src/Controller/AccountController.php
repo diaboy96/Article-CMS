@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -49,7 +48,7 @@ class AccountController extends AbstractController
      * @param $user_id
      * @return RedirectResponse
      */
-    public function activateUser($user_id)
+    public function activateUser($user_id): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
@@ -141,7 +140,7 @@ class AccountController extends AbstractController
      * @param $user_id
      * @return RedirectResponse
      */
-    public function removeUserAccount($user_id)
+    public function removeUserAccount($user_id): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
