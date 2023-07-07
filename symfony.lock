@@ -241,12 +241,12 @@
         "version": "v4.3.3"
     },
     "symfony/framework-bundle": {
-        "version": "5.1",
+        "version": "5.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "5.1",
-            "ref": "0cc6d287da757e1167e287d84487662825119e91"
+            "version": "5.2",
+            "ref": "ffefb327a5300bbf5ff7ed586afe17d9b507c7c5"
         },
         "files": [
             "config/packages/cache.yaml",
