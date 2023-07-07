@@ -4,7 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Exception;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,7 +20,10 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
-    public function fetchAllCommentsAndJoinUserName()
+	/**
+	 * @throws Exception
+	 */
+	public function fetchAllCommentsAndJoinUserName()
     {
         $conn = $this->getEntityManager()
             ->getConnection();
@@ -30,12 +34,14 @@ INNER JOIN `login` log
 ON com.user_id = log.id
 ORDER BY com.id DESC';
         $stmt = $conn->prepare($sql);
-        $stmt->execute();
 
-        return $stmt->fetchAll();
+        return $stmt->executeQuery();
     }
 
-    public function fetchCommentsByArticleIdAndJoinUserName($article_id)
+	/**
+	 * @throws Exception
+	 */
+	public function fetchCommentsByArticleIdAndJoinUserName($article_id)
     {
         $conn = $this->getEntityManager()
             ->getConnection();
@@ -47,12 +53,14 @@ ON com.user_id = log.id
 WHERE article_id = '.$article_id.'
 ORDER BY com.id DESC';
         $stmt = $conn->prepare($sql);
-        $stmt->execute();
 
-        return $stmt->fetchAll();
+        return $stmt->executeQuery();
     }
 
-    public function fetchCommentsByUserId($user_id)
+	/**
+	 * @throws Exception
+	 */
+	public function fetchCommentsByUserId($user_id)
     {
         $conn = $this->getEntityManager()
             ->getConnection();
@@ -61,8 +69,7 @@ SELECT *
 FROM `comment`
 WHERE user_id = '.$user_id;
         $stmt = $conn->prepare($sql);
-        $stmt->execute();
 
-        return $stmt->fetchAll();
+        return $stmt->executeQuery();
     }
 }
