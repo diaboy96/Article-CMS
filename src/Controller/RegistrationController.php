@@ -13,11 +13,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
+    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    {
+    }
     /**
-     * @Route("/registration", name="registration")
      * @param Request $request
      * @return RedirectResponse|Response
      */
+    #[Route(path: '/registration', name: 'registration')]
     public function index(Request $request)
     {
         $registration_form = $this->createForm(RegisterType::class);
@@ -35,11 +38,11 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/registration/activation/{email}/{hash}", name="registration_activation", defaults={"email" = "not_set", "hash" = "not_set"})
      * @param $email
      * @param $hash
      * @return RedirectResponse
      */
+    #[Route(path: '/registration/activation/{email}/{hash}', name: 'registration_activation', defaults: ['email' => 'not_set', 'hash' => 'not_set'])]
     public function activation($email, $hash): RedirectResponse
     {
         $error_code = '';
@@ -48,14 +51,14 @@ class RegistrationController extends AbstractController
         if ($email !== 'not_set' && $hash !== 'not_set') {
             $email = htmlspecialchars(strip_tags($email));
             $hash = htmlspecialchars(strip_tags($hash));
-            $login_repository = $this->getDoctrine()->getRepository(Login::class);
+            $login_repository = $this->managerRegistry->getRepository(Login::class);
 
             $user = $login_repository->findOneBy(['email' => $email,
                         'hash' => $hash]
             );
 
             if ($user) { // uzivatel s emailem a hashem existuje (hash souhlasi) a vse je ok
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $user->setHash('');
                 $user->setActive(1);
                 $entityManager->persist($user);
@@ -128,7 +131,7 @@ class RegistrationController extends AbstractController
         if ($pass == $pass_again) {
 
             if (strlen($form_data['pass']) > 7 && preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $form_data['pass'])) {
-                $login_repository = $this->getDoctrine()->getRepository(Login::class);
+                $login_repository = $this->managerRegistry->getRepository(Login::class);
                 $name_check = $this->checkIfIsInDb($login_repository, 'name', $name);
                 $email_check = $this->checkIfIsInDb($login_repository, 'email', $email);
 
@@ -231,7 +234,7 @@ Pro aktivaci účtu prosím klikněte na následující link:
      */
     private function saveToDb(string $name, string $pass, string $email, string $hash)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->managerRegistry->getManager();
         $login = new Login();
         $login->setName($name);
         $login->setPass($pass);

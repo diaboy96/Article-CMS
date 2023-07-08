@@ -14,14 +14,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
+    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    {
+    }
     /**
-     * @Route("/", name="main")
      * @param Request $request
      * @return RedirectResponse|Response
      */
+    #[Route(path: '/', name: 'main')]
     public function index(Request $request)
     {
-        $doctrine = $this->getDoctrine();
+        $doctrine = $this->managerRegistry;
         $session = $request->getSession();
         $user_id = $session->get('user_id');
         $user_name = $session->get('user_name');
@@ -109,9 +112,9 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="logout")
      * @return RedirectResponse
      */
+    #[Route(path: '/logout', name: 'logout')]
     public function processLogout(Request $request): RedirectResponse
     {
         $session = $request->getSession();

@@ -16,11 +16,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
 {
+    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    {
+    }
     /**
-     * @Route("/createArticle", name="article_create")
      * @param Request $request
      * @return RedirectResponse|Response
      */
+    #[Route(path: '/createArticle', name: 'article_create')]
     public function createArticle(Request $request)
     {
         $admin_is_logged_in = new AdminController();
@@ -33,7 +36,7 @@ class ArticleController extends AbstractController
 
             if ($article_form->isSubmitted() && $article_form->isValid()) {
                 // get data and filter from xss
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $data = $article_form->getData();
                 $data = $this->purifyFormData($data);
 
@@ -56,11 +59,11 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/editArticle/{article_id}", name="article_edit", defaults={"article_id" = "not_set"})
      * @param $article_id
      * @param Request $request
      * @return RedirectResponse|Response
      */
+    #[Route(path: '/editArticle/{article_id}', name: 'article_edit', defaults: ['article_id' => 'not_set'])]
     public function editArticle($article_id, Request $request)
     {
         $admin_is_logged_in = new AdminController();
@@ -68,7 +71,7 @@ class ArticleController extends AbstractController
 
         if ($admin_is_logged_in) {
             // get article (from db)
-            $doctrine = $this->getDoctrine();
+            $doctrine = $this->managerRegistry;
             $article_id = intval($article_id);
             $article = $doctrine
                 ->getRepository(Article::class)
@@ -114,17 +117,17 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/removeArticle/{article_id}", name="article_remove", defaults={"article_id" = "not_set"})
      * @param $article_id
      * @return RedirectResponse
      */
+    #[Route(path: '/removeArticle/{article_id}', name: 'article_remove', defaults: ['article_id' => 'not_set'])]
     public function removeArticle($article_id): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
 
         if ($admin_is_logged_in) {
-            $doctrine = $this->getDoctrine();
+            $doctrine = $this->managerRegistry;
             $entityManager = $doctrine->getManager();
             $article_id = intval($article_id);
             $article = $doctrine
@@ -149,15 +152,15 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/articleDetail/{article_id}", name="article_detail", defaults={"article_id" = "not_set"})
      * @param $article_id
      * @param Request $request
      * @return RedirectResponse|Response
      */
+    #[Route(path: '/articleDetail/{article_id}', name: 'article_detail', defaults: ['article_id' => 'not_set'])]
     public function articleDetail($article_id, Request $request)
     {
         if ($article_id !== 'not_set') {
-            $doctrine = $this->getDoctrine();
+            $doctrine = $this->managerRegistry;
             $article_id = intval($article_id);
             $article = $doctrine
                 ->getRepository(Article::class)
@@ -233,11 +236,11 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/editComment/{comment_id}", name="comment_edit", defaults={"comment_id" = "not_set"})
      * @param $comment_id
      * @param Request $request
      * @return RedirectResponse
      */
+    #[Route(path: '/editComment/{comment_id}', name: 'comment_edit', defaults: ['comment_id' => 'not_set'])]
     public function editComment($comment_id, Request $request): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
@@ -245,7 +248,7 @@ class ArticleController extends AbstractController
         $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUserOrAdminIsLoggedInAndGetComment($comment_id, $admin_is_logged_in);
 
         if ($comment['is_owned_by_user']) {
-            $entityManager =  $this->getDoctrine()->getManager();
+            $entityManager =  $this->managerRegistry->getManager();
 
             $comment['comment']->setComment($request->query->get('edit_comment_value'));
             $entityManager->persist($comment['comment']);
@@ -273,10 +276,10 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/removeComment/{comment_id}", name="comment_remove", defaults={"comment_id" = "not_set"})
      * @param $comment_id
      * @return RedirectResponse
      */
+    #[Route(path: '/removeComment/{comment_id}', name: 'comment_remove', defaults: ['comment_id' => 'not_set'])]
     public function removeComment($comment_id): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
@@ -284,7 +287,7 @@ class ArticleController extends AbstractController
         $comment = $this->checkIfCommentIsOwnedByCurrentlyLoggedUserOrAdminIsLoggedInAndGetComment($comment_id, $admin_is_logged_in);
 
         if ($comment['is_owned_by_user']) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->managerRegistry->getManager();
             $entityManager->remove($comment['comment']);
             $entityManager->flush();
 
@@ -321,7 +324,7 @@ class ArticleController extends AbstractController
     ){
         $session = $request->getSession();
         $user_id = $session->get('user_id');
-        $doctrine = $this->getDoctrine();
+        $doctrine = $this->managerRegistry;
 
         if ($admin_is_logged_in) {
             $comment = $doctrine

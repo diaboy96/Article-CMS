@@ -13,9 +13,10 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 class AccountController extends AbstractController
 {
-    /**
-     * @Route("/admin/accountOverview", name="account_overview")
-     */
+    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    {
+    }
+    #[Route(path: '/admin/accountOverview', name: 'account_overview')]
     public function index(Request $request)
     {
         $admin_is_logged_in = new AdminController();
@@ -23,7 +24,7 @@ class AccountController extends AbstractController
 
         if ($admin_is_logged_in) {
 
-            $users = $this->getDoctrine()
+            $users = $this->managerRegistry
                 ->getRepository(Login::class)
                 ->fetchAllDataExceptPasswords();
 
@@ -44,16 +45,16 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("admin/activateUser/{user_id}", name="activate_user", defaults={"user_id" = "not_set"})
      * @param $user_id
      * @return RedirectResponse
      */
+    #[Route(path: 'admin/activateUser/{user_id}', name: 'activate_user', defaults: ['user_id' => 'not_set'])]
     public function activateUser($user_id): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
         $user_id = intval($user_id);
-        $doctrine = $this->getDoctrine();
+        $doctrine = $this->managerRegistry;
 
         if ($admin_is_logged_in) {
             $user = $doctrine
@@ -89,16 +90,16 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("admin/userComments/{user_id}", name="user_comments", defaults={"user_id" = "not_set"})
      * @param $user_id
      * @return RedirectResponse|Response
      */
+    #[Route(path: 'admin/userComments/{user_id}', name: 'user_comments', defaults: ['user_id' => 'not_set'])]
     public function userComments(Request $request, $user_id)
     {
         $admin_is_logged_in = new AdminController();
         $admin_is_logged_in = $admin_is_logged_in->checkIfAdminIsLoggedIn();
         $user_id = intval($user_id);
-        $doctrine = $this->getDoctrine();
+        $doctrine = $this->managerRegistry;
 
         if ($admin_is_logged_in) {
             $comments = $doctrine
@@ -136,10 +137,10 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/admin/removeUserAccount/{user_id}", name="user_account_remove", defaults={"user_id" = "not_set"})
      * @param $user_id
      * @return RedirectResponse
      */
+    #[Route(path: '/admin/removeUserAccount/{user_id}', name: 'user_account_remove', defaults: ['user_id' => 'not_set'])]
     public function removeUserAccount($user_id): RedirectResponse
     {
         $admin_is_logged_in = new AdminController();
@@ -147,7 +148,7 @@ class AccountController extends AbstractController
 
         if ($admin_is_logged_in) {
 
-            $doctrine = $this->getDoctrine();
+            $doctrine = $this->managerRegistry;
             $entityManager = $doctrine->getManager();
             $user_id = intval($user_id);
             $user = $doctrine

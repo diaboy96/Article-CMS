@@ -14,15 +14,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractController
 {
+    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    {
+    }
     /**
-     * @Route("/admin", name="admin")
      * @param Request $request
      * @return RedirectResponse|Response
      */
+    #[Route(path: '/admin', name: 'admin')]
     public function index(Request $request)
     {
         $session = $request->getSession();
-        $doctrine = $this->getDoctrine();
+        $doctrine = $this->managerRegistry;
         $articleManager = new ArticleManager();
         $articles_and_comments = $articleManager->getAllArticlesWithComments($doctrine);
 
@@ -123,9 +126,9 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/logout", name="admin_logout")
      * @return RedirectResponse
      */
+    #[Route(path: '/admin/logout', name: 'admin_logout')]
     public function logout(Request $request): RedirectResponse
     {
         $session = $request->getSession();
