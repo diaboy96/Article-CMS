@@ -51,7 +51,7 @@ class ArticleController extends AbstractController
             }
 
             return $this->render('admin/article_manage.html.twig', [
-                'article_form' => $article_form->createView()
+                'article_form' => $article_form
             ]);
         } else {
             return $this->redirectToRoute('admin');
@@ -100,7 +100,7 @@ class ArticleController extends AbstractController
                 }
 
                 return $this->render('admin/article_manage.html.twig', [
-                    'article_form' => $article_form->createView(),
+                    'article_form' => $article_form,
                     'article_content' => $article_content,
                     'article_header' => $article_header
                 ]);
@@ -204,7 +204,7 @@ class ArticleController extends AbstractController
                         'user_id' => $user_id,
                         'user_name' => $user_name,
                         'button_back' => true,
-                        'comment_form' => $comment_form->createView()
+                        'comment_form' => $comment_form
                     ]);
 
                 } else { // user is not logged in
