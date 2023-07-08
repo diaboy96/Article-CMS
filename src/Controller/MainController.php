@@ -108,7 +108,7 @@ class MainController extends AbstractController
             return $this->render('main/index.html.twig', [
                 'articles' => $articles_and_comments['articles'],
                 'comments' => $articles_and_comments['comments'],
-                'login_form' => $login_form->createView()
+                'login_form' => $login_form
             ]);
 
         }
