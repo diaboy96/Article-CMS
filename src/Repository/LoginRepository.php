@@ -4,7 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Login;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Result;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Exception;
 
 /**
@@ -20,10 +21,10 @@ class LoginRepository extends ServiceEntityRepository
         parent::__construct($registry, Login::class);
     }
 
-	/**
-	 * @throws Exception
-	 */
-	public function fetchAllDataExceptPasswords()
+    /**
+     * @throws Exception
+     */
+    public function fetchAllDataExceptPasswords(): Result
     {
         $conn = $this->getEntityManager()
             ->getConnection();
@@ -31,6 +32,7 @@ class LoginRepository extends ServiceEntityRepository
 SELECT `id`, `name`, `email`, `hash`, `active`, `type`
 FROM `login`';
         $stmt = $conn->prepare($sql);
+
         return $stmt->executeQuery();
     }
 }

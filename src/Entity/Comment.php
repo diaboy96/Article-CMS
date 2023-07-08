@@ -14,22 +14,22 @@ class Comment
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $user_id;
+    private ?int $user_id;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $article_id;
+    private ?int $article_id;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $comment;
+    private ?string $comment;
 
     public function getId(): ?int
     {

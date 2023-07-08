@@ -6,6 +6,8 @@ use App\Form\CommentType;
 use App\Form\LoginType;
 use App\Model\ArticleManager;
 use App\Model\LoginManager;
+use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,23 +16,24 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractController
 {
-    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    public function __construct(private ManagerRegistry $managerRegistry)
     {
     }
+
     /**
      * @param Request $request
      * @return RedirectResponse|Response
+     * @throws Exception
      */
     #[Route(path: '/admin', name: 'admin')]
-    public function index(Request $request)
+    public function index(Request $request): RedirectResponse|Response
     {
         $session = $request->getSession();
         $doctrine = $this->managerRegistry;
         $articleManager = new ArticleManager();
         $articles_and_comments = $articleManager->getAllArticlesWithComments($doctrine);
 
-        $admin_is_logged_in = $this->checkIfAdminIsLoggedIn();
-
+        $admin_is_logged_in = $this->checkIfAdminIsLoggedIn($request);
         if ($admin_is_logged_in) {
             $admin_id = $session->get('admin_id');
             $admin_name = $session->get('admin_name');
@@ -111,9 +114,10 @@ class AdminController extends AbstractController
     }
 
     /**
+     * @param Request $request
      * @return bool
      */
-    public function checkIfAdminIsLoggedIn(Request $request)
+    public static function checkIfAdminIsLoggedIn(Request $request): bool
     {
         $session = $request->getSession();
         $admin_id = intval($session->get('admin_id'));
@@ -126,6 +130,7 @@ class AdminController extends AbstractController
     }
 
     /**
+     * @param Request $request
      * @return RedirectResponse
      */
     #[Route(path: '/admin/logout', name: 'admin_logout')]

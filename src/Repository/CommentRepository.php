@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Result;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,10 +21,10 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
-	/**
-	 * @throws Exception
-	 */
-	public function fetchAllCommentsAndJoinUserName()
+    /**
+     * @throws Exception
+     */
+    public function fetchAllCommentsAndJoinUserName(): Result
     {
         $conn = $this->getEntityManager()
             ->getConnection();
@@ -38,10 +39,10 @@ ORDER BY com.id DESC';
         return $stmt->executeQuery();
     }
 
-	/**
-	 * @throws Exception
-	 */
-	public function fetchCommentsByArticleIdAndJoinUserName($article_id)
+    /**
+     * @throws Exception
+     */
+    public function fetchCommentsByArticleIdAndJoinUserName($article_id): Result
     {
         $conn = $this->getEntityManager()
             ->getConnection();
@@ -57,10 +58,10 @@ ORDER BY com.id DESC';
         return $stmt->executeQuery();
     }
 
-	/**
-	 * @throws Exception
-	 */
-	public function fetchCommentsByUserId($user_id)
+    /**
+     * @throws Exception
+     */
+    public function fetchCommentsByUserId($user_id): Result
     {
         $conn = $this->getEntityManager()
             ->getConnection();

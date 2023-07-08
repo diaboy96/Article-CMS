@@ -6,6 +6,8 @@ use App\Form\CommentType;
 use App\Form\LoginType;
 use App\Model\ArticleManager;
 use App\Model\LoginManager;
+use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,15 +16,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    public function __construct(private ManagerRegistry $managerRegistry)
     {
     }
+
     /**
      * @param Request $request
      * @return RedirectResponse|Response
+     * @throws Exception
      */
     #[Route(path: '/', name: 'main')]
-    public function index(Request $request)
+    public function index(Request $request): RedirectResponse|Response
     {
         $doctrine = $this->managerRegistry;
         $session = $request->getSession();
@@ -31,7 +35,7 @@ class MainController extends AbstractController
 
         $articleManager = new ArticleManager();
         $articles_and_comments = $articleManager->getAllArticlesWithComments($doctrine);
-        if (isset($user_id) && !empty($user_id) && isset($user_name) && !empty($user_name)){ // user is LOGGED IN
+        if (!empty($user_id) && !empty($user_name)){ // user is LOGGED IN
 
             // generate CommentType forms
             $comment_forms = [];
@@ -112,6 +116,7 @@ class MainController extends AbstractController
     }
 
     /**
+     * @param Request $request
      * @return RedirectResponse
      */
     #[Route(path: '/logout', name: 'logout')]
