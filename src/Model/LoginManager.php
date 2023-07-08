@@ -2,7 +2,7 @@
 
 namespace App\Model;
 use App\Entity\Login;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 
 class LoginManager

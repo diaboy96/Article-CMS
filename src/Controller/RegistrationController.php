@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Login;
 use App\Form\RegisterType;
 use App\Repository\LoginRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,12 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RegistrationController extends AbstractController
 {
+    public function __construct(private ManagerRegistry $managerRegistry)
+    {
+    }
+
     /**
-     * @Route("/registration", name="registration")
      * @param Request $request
      * @return RedirectResponse|Response
      */
-    public function index(Request $request)
+    #[Route(path: '/registration', name: 'registration')]
+    public function index(Request $request): RedirectResponse|Response
     {
         $registration_form = $this->createForm(RegisterType::class);
         $registration_form->handleRequest($request);
@@ -35,11 +41,11 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/registration/activation/{email}/{hash}", name="registration_activation", defaults={"email" = "not_set", "hash" = "not_set"})
      * @param $email
      * @param $hash
      * @return RedirectResponse
      */
+    #[Route(path: '/registration/activation/{email}/{hash}', name: 'registration_activation', defaults: ['email' => 'not_set', 'hash' => 'not_set'])]
     public function activation($email, $hash): RedirectResponse
     {
         $error_code = '';
@@ -48,14 +54,14 @@ class RegistrationController extends AbstractController
         if ($email !== 'not_set' && $hash !== 'not_set') {
             $email = htmlspecialchars(strip_tags($email));
             $hash = htmlspecialchars(strip_tags($hash));
-            $login_repository = $this->getDoctrine()->getRepository(Login::class);
+            $login_repository = $this->managerRegistry->getRepository(Login::class);
 
             $user = $login_repository->findOneBy(['email' => $email,
                         'hash' => $hash]
             );
 
             if ($user) { // uzivatel s emailem a hashem existuje (hash souhlasi) a vse je ok
-                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager = $this->managerRegistry->getManager();
                 $user->setHash('');
                 $user->setActive(1);
                 $entityManager->persist($user);
@@ -114,7 +120,7 @@ class RegistrationController extends AbstractController
      * @param $form_data
      * @return RedirectResponse
      */
-    private function register(Request $request,$form_data)
+    private function register(Request $request,$form_data): RedirectResponse
     {
         $name = htmlspecialchars(strip_tags($form_data['name']));
         $pass = htmlspecialchars(strip_tags(hash('sha512', $form_data['pass'])));
@@ -128,7 +134,7 @@ class RegistrationController extends AbstractController
         if ($pass == $pass_again) {
 
             if (strlen($form_data['pass']) > 7 && preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $form_data['pass'])) {
-                $login_repository = $this->getDoctrine()->getRepository(Login::class);
+                $login_repository = $this->managerRegistry->getRepository(Login::class);
                 $name_check = $this->checkIfIsInDb($login_repository, 'name', $name);
                 $email_check = $this->checkIfIsInDb($login_repository, 'email', $email);
 
@@ -179,12 +185,12 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @param LoginRepository $login_repository
+     * @param ObjectRepository $login_repository
      * @param $column
      * @param $value
      * @return bool
      */
-    private function checkIfIsInDb(LoginRepository $login_repository, $column, $value)
+    private function checkIfIsInDb(ObjectRepository $login_repository, $column, $value): bool
     {
         $response = $login_repository->findBy([
             $column => $value
@@ -203,7 +209,7 @@ class RegistrationController extends AbstractController
      * @param $hash
      * @return bool
      */
-    private function sendVerificationMail(Request $request, $email, $hash)
+    private function sendVerificationMail(Request $request, $email, $hash): bool
     {
         $to = $email;
         $subject = 'Ověření registrace';
@@ -229,9 +235,9 @@ Pro aktivaci účtu prosím klikněte na následující link:
      * @param string $hash
      * @return boolean
      */
-    private function saveToDb(string $name, string $pass, string $email, string $hash)
+    private function saveToDb(string $name, string $pass, string $email, string $hash): bool
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->managerRegistry->getManager();
         $login = new Login();
         $login->setName($name);
         $login->setPass($pass);
